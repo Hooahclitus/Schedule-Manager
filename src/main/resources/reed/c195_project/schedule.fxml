@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="reed.c195_project.controller.ScheduleController">
+  <tabs>
+    <Tab fx:id="tbAppointments" text="Appointments">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0">
+               <children>
+                  <VBox spacing="10.0">
+                     <children>
+                        <HBox>
+                           <children>
+                              <ComboBox fx:id="comboAppointmentsFilter" prefWidth="150.0" promptText="Filter By" />
+                              <TextField fx:id="fldAppointmentsSearch" prefWidth="200.0" promptText="Search Appointments">
+                                 <HBox.margin>
+                                    <Insets left="665.0" />
+                                 </HBox.margin>
+                              </TextField>
+                           </children>
+                        </HBox>
+                        <TableView fx:id="tblAppointments" prefWidth="1015.0">
+                           <columns>
+                              <TableColumn fx:id="colAppointmentID" minWidth="-1.0" prefWidth="100.0" text="Appointment ID" />
+                              <TableColumn fx:id="colAppointmentTitle" text="Title" />
+                              <TableColumn fx:id="colAppointmentDescription" prefWidth="250.0" text="Description" />
+                              <TableColumn fx:id="colAppointmentLocation" text="Location" />
+                              <TableColumn fx:id="colAppointmentContact" text="Contact" />
+                              <TableColumn fx:id="colAppointmentType" text="Type" />
+                              <TableColumn fx:id="colAppointmentStartDate" text="Start Date" />
+                              <TableColumn fx:id="colAppointmentStartTime" text="Start Time" />
+                              <TableColumn fx:id="colAppointmentEndDate" text="End Date" />
+                              <TableColumn fx:id="colAppointmentEndTime" text="End Time" />
+                              <TableColumn fx:id="colAppointmentCustomerID" text="Customer ID" />
+                              <TableColumn fx:id="colAppointmentUserID" prefWidth="55.0" text="User ID" />
+                           </columns>
+                        </TableView>
+                        <HBox fx:id="buttons" alignment="CENTER" spacing="10.0">
+                           <children>
+                              <Button fx:id="btnAddAppointment" mnemonicParsing="false" onAction="#addAppointment" prefWidth="75.0" text="Add" />
+                              <Button fx:id="btnModifyAppointment" mnemonicParsing="false" onAction="#modifyAppointment" prefWidth="75.0" text="Modify" />
+                              <Button fx:id="btnDeleteAppointment" mnemonicParsing="false" onAction="#deleteAppointment" prefWidth="75.0" text="Delete" />
+                              <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#logout" prefWidth="75.0" text="Logout" />
+                           </children>
+                           <padding>
+                              <Insets top="2.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                     </padding>
+                  </VBox>
+               </children></AnchorPane>
+      </content>
+    </Tab>
+    <Tab fx:id="tbCustomers" text="Customers">
+         <content>
+            <AnchorPane>
+               <children>
+                  <VBox spacing="10.0">
+                     <children>
+                        <HBox spacing="10.0">
+                           <children>
+                              <ComboBox fx:id="comboDivisionFilter" prefWidth="150.0" promptText="Filter By Division" />
+                              <ComboBox fx:id="comboCountryFilter" prefWidth="150.0" promptText="Filter By Country" />
+                              <TextField fx:id="fldCustomersSearch" prefWidth="200.0" promptText="Search Customers">
+                                 <HBox.margin>
+                                    <Insets left="495.0" />
+                                 </HBox.margin>
+                              </TextField>
+                           </children>
+                        </HBox>
+                        <TableView fx:id="tblCustomers" prefWidth="1015.0">
+                          <columns>
+                            <TableColumn fx:id="colCustomerID" text="Customer ID" />
+                            <TableColumn fx:id="colCustomerName" prefWidth="155.0" text="Name" />
+                              <TableColumn fx:id="colCustomerAddress" prefWidth="300.0" text="Address" />
+                              <TableColumn fx:id="colCustomerCountry" prefWidth="100.0" text="Country" />
+                              <TableColumn fx:id="colCustomerDivision" prefWidth="150.0" text="Division" />
+                              <TableColumn fx:id="colCustomerPostal" text="Postal Code" />
+                              <TableColumn fx:id="colCustomerPhone" prefWidth="150.0" text="Phone Number" />
+                          </columns>
+                        </TableView>
+                        <HBox alignment="CENTER" spacing="10.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#addCustomer" prefWidth="75.0" text="Add" />
+                              <Button mnemonicParsing="false" onAction="#modifyCustomer" prefWidth="75.0" text="Modify" />
+                              <Button mnemonicParsing="false" onAction="#deleteCustomer" prefWidth="75.0" text="Delete" />
+                              <Button mnemonicParsing="false" onAction="#logout" prefWidth="75.0" text="Logout" />
+                           </children>
+                           <padding>
+                              <Insets top="2.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </AnchorPane>
+         </content>
+    </Tab>
+  </tabs>
+</TabPane>
