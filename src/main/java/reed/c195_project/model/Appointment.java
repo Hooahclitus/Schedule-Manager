@@ -13,8 +13,8 @@ public record Appointment(int appointmentID,
                           LocalTime startTime,
                           LocalDate endDate,
                           LocalTime endTime,
-                          int customerID,
-                          int userID) {
+                          String customerID,
+                          String userID) {
 
     public int getHour() {
         return this.startTime.getHour();

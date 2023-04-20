@@ -1,21 +1,17 @@
 package reed.c195_project.controller;
 
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import reed.c195_project.model.Appointment;
-import reed.c195_project.util.JDBC;
 import reed.c195_project.util.SQL;
 import reed.c195_project.util.SceneManager;
 import reed.c195_project.util.Validate;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -30,10 +26,10 @@ public class AppointmentController implements Initializable {
     private DatePicker datePickerStart, datePickerEnd;
 
     @FXML
-    private TextField fldAppointmentID, fldTitle, fldDescription, fldLocation, fldType, fldCustomerID, fldUserID;
+    private TextField fldAppointmentID, fldTitle, fldDescription, fldLocation, fldType;
 
     @FXML
-    private ComboBox<Object> comboContacts, comboStartHour, comboStartMinute, comboEndHour, comboEndMinute;
+    private ComboBox<Object> comboContacts, comboStartHour, comboStartMinute, comboEndHour, comboEndMinute, comboCustomerID, comboUserID;
 
     @FXML
     private Button btnAction;
@@ -43,7 +39,9 @@ public class AppointmentController implements Initializable {
         Stream.of(comboStartHour, comboEndHour).forEach(e -> e.setItems(observableList(rangeClosed(0, 24).boxed().collect(toList()))));
         Stream.of(comboStartMinute, comboEndMinute).forEach(e -> e.setItems(observableList(rangeClosed(0, 59).boxed().collect(toList()))));
 
-        comboContacts.setItems(SQL.selectColumnData("SELECT Contact_Name FROM contacts", "Contact_Name"));
+        comboContacts.setItems(SQL.selectColumnData("SELECT Contact_Name FROM contacts ORDER BY Contact_Name", "Contact_Name"));
+        comboCustomerID.setItems(SQL.selectColumnData("SELECT Customer_ID FROM customers ORDER BY Customer_ID", "Customer_ID"));
+        comboUserID.setItems(SQL.selectColumnData("SELECT User_ID FROM users ORDER BY User_ID", "User_ID"));
 
         var fieldsMap = Map.of(
                 fldTitle, 50,
@@ -52,7 +50,7 @@ public class AppointmentController implements Initializable {
                 fldType, 50
         );
 
-        var combosList = List.of(comboContacts, comboStartHour, comboStartMinute, comboEndHour, comboEndMinute);
+        var combosList = List.of(comboContacts, comboStartHour, comboStartMinute, comboEndHour, comboEndMinute, comboCustomerID, comboUserID);
         var datePickersList = List.of(datePickerStart, datePickerEnd);
 
         Validate.appointmentInputs(fieldsMap, combosList, datePickersList, btnAction);
@@ -74,8 +72,8 @@ public class AppointmentController implements Initializable {
                 4, fldType.getText(),
                 5, getDateAndTime(datePickerStart, comboStartHour, comboStartMinute),
                 6, getDateAndTime(datePickerEnd, comboEndHour, comboEndMinute),
-                7, Integer.parseInt(fldCustomerID.getText()),
-                8, Integer.parseInt(fldUserID.getText()),
+                7, comboCustomerID.getSelectionModel().getSelectedItem(),
+                8, comboUserID.getSelectionModel().getSelectedItem(),
                 9, comboContacts.getSelectionModel().getSelectedItem()
         );
 
@@ -97,8 +95,8 @@ public class AppointmentController implements Initializable {
                 4, fldType.getText(),
                 5, getDateAndTime(datePickerStart, comboStartHour, comboStartMinute),
                 6, getDateAndTime(datePickerEnd, comboEndHour, comboEndMinute),
-                7, Integer.parseInt(fldCustomerID.getText()),
-                8, Integer.parseInt(fldUserID.getText()),
+                7, comboCustomerID.getSelectionModel().getSelectedItem(),
+                8, comboUserID.getSelectionModel().getSelectedItem(),
                 9, comboContacts.getSelectionModel().getSelectedItem(),
                 10, fldAppointmentID.getText()
         );
@@ -123,7 +121,9 @@ public class AppointmentController implements Initializable {
                 comboStartHour, appointment.getHour(),
                 comboStartMinute, appointment.getMinute(),
                 comboEndHour, appointment.getHour(),
-                comboEndMinute, appointment.getMinute()
+                comboEndMinute, appointment.getMinute(),
+                comboCustomerID, appointment.customerID(),
+                comboUserID, appointment.userID()
         );
 
         var textFieldMap = Map.of(
@@ -131,13 +131,11 @@ public class AppointmentController implements Initializable {
                 fldTitle, appointment.title(),
                 fldDescription, appointment.description(),
                 fldLocation, appointment.location(),
-                fldType, appointment.type(),
-                fldCustomerID, String.valueOf(appointment.customerID()),
-                fldUserID, String.valueOf(appointment.userID())
+                fldType, appointment.type()
         );
 
-        datePickerMap.forEach(ComboBoxBase::setValue);
         comboBoxMap.forEach(ComboBoxBase::setValue);
+        datePickerMap.forEach(ComboBoxBase::setValue);
         textFieldMap.forEach(TextInputControl::setText);
     }
 

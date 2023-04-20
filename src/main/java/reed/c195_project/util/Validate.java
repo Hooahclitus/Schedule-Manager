@@ -6,7 +6,6 @@ import javafx.scene.control.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -47,7 +46,8 @@ public abstract class Validate {
         list.forEach(comboBox -> comboBox.getSelectionModel().selectedItemProperty().addListener(inputValidation));
     }
 
-    public static void appointmentInputs(Map<TextField, Integer> fields, List<ComboBox<Object>> combos, List<DatePicker> datePickers, Button btn) {
+    public static void appointmentInputs(Map<TextField, Integer> fields, List<ComboBox<Object>> combos,
+                                         List<DatePicker> datePickers, Button btn) {
         InvalidationListener inputValidation = observable -> {
             boolean areFieldsEmpty = fields.keySet().stream()
                     .map(TextField::getText)

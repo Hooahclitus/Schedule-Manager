@@ -71,13 +71,13 @@
       <HBox fx:id="customerID" alignment="CENTER_RIGHT" spacing="10.0">
          <children>
             <Label text="Customer ID" />
-            <TextField fx:id="fldCustomerID" prefWidth="170.0" />
+            <ComboBox fx:id="comboCustomerID" prefWidth="170.0" />
          </children>
       </HBox>
       <HBox fx:id="userID" alignment="CENTER_RIGHT" spacing="10.0">
          <children>
             <Label text="User ID" />
-            <TextField fx:id="fldUserID" prefWidth="170.0" />
+            <ComboBox fx:id="comboUserID" prefWidth="170.0" />
          </children>
       </HBox>
       <HBox alignment="CENTER" spacing="10.0">

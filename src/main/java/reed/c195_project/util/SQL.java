@@ -58,8 +58,8 @@ public abstract class SQL {
                         resultSet.getTimestamp("Start").toLocalDateTime().toLocalTime(),
                         resultSet.getTimestamp("End").toLocalDateTime().toLocalDate(),
                         resultSet.getTimestamp("End").toLocalDateTime().toLocalTime(),
-                        resultSet.getInt("Customer_ID"),
-                        resultSet.getInt("User_ID")
+                        resultSet.getString("Customer_ID"),
+                        resultSet.getString("User_ID")
                 ));
             }
         } catch (SQLException e) {
