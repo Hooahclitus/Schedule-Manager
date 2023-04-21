@@ -9,7 +9,7 @@
       <HBox alignment="CENTER_RIGHT" spacing="10.0">
          <children>
             <Label text="Customer ID" />
-            <TextField fx:id="customerID" disable="true" prefWidth="170.0" text="Auto-Generated" />
+            <TextField fx:id="customerID" disable="true" prefWidth="170.0" />
          </children>
       </HBox>
       <HBox alignment="CENTER_RIGHT" spacing="10.0">
@@ -33,7 +33,7 @@
       <HBox alignment="CENTER_RIGHT" spacing="10.0">
          <children>
             <Label text="Division" />
-            <ComboBox fx:id="division" disable="true" prefWidth="170.0" />
+            <ComboBox fx:id="division" prefWidth="170.0" />
          </children>
       </HBox>
       <HBox alignment="CENTER_RIGHT" spacing="10.0">
@@ -50,7 +50,7 @@
       </HBox>
       <HBox alignment="CENTER" spacing="10.0">
          <children>
-            <Button fx:id="submit" disable="true" mnemonicParsing="false" onAction="#insertCustomer" prefWidth="75.0" text="Add" />
+            <Button fx:id="submit" disable="true" mnemonicParsing="false" onAction="#submitCustomerData" prefWidth="75.0" text="Update" />
             <Button mnemonicParsing="false" onAction="#cancel" prefWidth="75.0" text="Cancel" />
          </children>
          <padding>

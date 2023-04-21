@@ -7,7 +7,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import reed.c195_project.util.SceneManager;
+import reed.c195_project.util.LoadScene;
 import reed.c195_project.util.Validate;
 
 import java.io.IOException;
@@ -73,7 +73,7 @@ public class LoginController implements Initializable {
     @FXML
     private void login(ActionEvent actionEvent) throws SQLException, IOException {
         if (Validate.user(fldUserName, fldPassword)) {
-            SceneManager.loadScheduleScene(actionEvent);
+            LoadScene.schedule(actionEvent);
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setHeaderText(resourceBundle.getString("alertHeader"));
@@ -84,6 +84,6 @@ public class LoginController implements Initializable {
 
     @FXML
     private void exit() {
-        SceneManager.exitApplication();
+        LoadScene.exitApplication();
     }
 }

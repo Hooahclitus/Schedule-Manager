@@ -9,7 +9,7 @@
       <HBox alignment="CENTER_RIGHT" spacing="10.0">
          <children>
             <Label text="Appointment ID" />
-            <TextField fx:id="appointmentID" disable="true" prefWidth="170.0" />
+            <TextField fx:id="appointmentID" disable="true" prefWidth="170.0" text="Auto-Generated" />
          </children>
       </HBox>
       <HBox alignment="CENTER_RIGHT" spacing="10.0">
@@ -82,7 +82,7 @@
       </HBox>
       <HBox alignment="CENTER" spacing="10.0">
          <children>
-            <Button fx:id="submit" disable="true" mnemonicParsing="false" onAction="#updateAppointment" prefWidth="75.0" text="Update" />
+            <Button fx:id="submit" disable="true" mnemonicParsing="false" onAction="#submitAppointmentData" prefWidth="75.0" text="Submit" />
             <Button mnemonicParsing="false" onAction="#cancel" prefWidth="75.0" text="Cancel" />
          </children>
          <padding>

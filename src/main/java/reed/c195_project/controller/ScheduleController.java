@@ -12,7 +12,7 @@ import javafx.scene.control.TableView;
 import reed.c195_project.model.Appointment;
 import reed.c195_project.model.Customer;
 import reed.c195_project.util.SQL;
-import reed.c195_project.util.SceneManager;
+import reed.c195_project.util.LoadScene;
 
 import java.io.IOException;
 import java.net.URL;
@@ -121,12 +121,12 @@ public class ScheduleController implements Initializable {
 
     @FXML
     private void addAppointment(ActionEvent actionEvent) throws IOException {
-        SceneManager.loadAddAppointmentScene(actionEvent);
+        LoadScene.appointment(actionEvent);
     }
 
     @FXML
     private void modifyAppointment(ActionEvent actionEvent) throws IOException {
-        SceneManager.loadUpdateAppointmentScene(actionEvent, tblAppointments.getSelectionModel().getSelectedItem());
+        LoadScene.appointment(actionEvent, tblAppointments.getSelectionModel().getSelectedItem());
     }
 
     @FXML
@@ -140,12 +140,12 @@ public class ScheduleController implements Initializable {
 
     @FXML
     private void addCustomer(ActionEvent actionEvent) throws IOException {
-        SceneManager.loadAddCustomerScene(actionEvent);
+        LoadScene.customer(actionEvent);
     }
 
     @FXML
     private void modifyCustomer(ActionEvent actionEvent) throws IOException {
-        SceneManager.loadUpdateCustomerScene(actionEvent, tblCustomers.getSelectionModel().getSelectedItem());
+        LoadScene.customer(actionEvent, tblCustomers.getSelectionModel().getSelectedItem());
     }
 
     @FXML
@@ -159,7 +159,7 @@ public class ScheduleController implements Initializable {
 
     @FXML
     private void logout(ActionEvent actionEvent) throws IOException {
-        SceneManager.loadLoginScene(actionEvent);
+        LoadScene.login(actionEvent);
     }
 }
 

@@ -6,7 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import reed.c195_project.model.Appointment;
 import reed.c195_project.util.SQL;
-import reed.c195_project.util.SceneManager;
+import reed.c195_project.util.LoadScene;
 import reed.c195_project.util.Validate;
 
 import java.io.IOException;
@@ -59,7 +59,6 @@ public class AppointmentController implements Initializable {
                         (Integer) minute.getSelectionModel().getSelectedItem()));
     }
 
-    @FXML
     private void insertAppointment(ActionEvent actionEvent) throws SQLException, IOException {
         var appointmentData = Map.of(
                 1, title.getText(),
@@ -78,10 +77,9 @@ public class AppointmentController implements Initializable {
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, (SELECT Contact_ID FROM contacts WHERE Contact_Name = ?))";
 
         SQL.updateTableData(sql, appointmentData);
-        SceneManager.loadScheduleScene(actionEvent);
+        LoadScene.schedule(actionEvent);
     }
 
-    @FXML
     private void updateAppointment(ActionEvent actionEvent) throws SQLException, IOException {
         var appointmentData = Map.of(
                 1, title.getText(),
@@ -101,10 +99,32 @@ public class AppointmentController implements Initializable {
                 "Contact_ID = (SELECT Contact_ID FROM contacts WHERE Contact_Name = ?) WHERE Appointment_ID = ?";
 
         SQL.updateTableData(sql, appointmentData);
-        SceneManager.loadScheduleScene(actionEvent);
+        LoadScene.schedule(actionEvent);
     }
 
-    public void loadAppointmentDataIntoForm(Appointment appointment) {
+    @FXML
+    private void submitAppointmentData(ActionEvent actionEvent) throws SQLException, IOException {
+        if (submit.getText().equals("Update")) {
+            updateAppointment(actionEvent);
+        } else {
+            insertAppointment(actionEvent);
+        }
+    }
+
+    public void setupAppointmentForm(Appointment... appointment) {
+        switch (appointment.length) {
+            case 0 -> {
+                submit.setText("Add");
+                appointmentID.setText("Auto-Generated");
+            }
+            case 1 -> {
+                submit.setText("Update");
+                loadAppointmentData(appointment[0]);
+            }
+        }
+    }
+
+    public void loadAppointmentData(Appointment appointment) {
         var fields = Map.of(
                 appointmentID, String.valueOf(appointment.appointmentID()),
                 title, appointment.title(),
@@ -135,7 +155,7 @@ public class AppointmentController implements Initializable {
 
     @FXML
     private void cancel(ActionEvent actionEvent) throws IOException {
-        SceneManager.loadScheduleScene(actionEvent);
+        LoadScene.schedule(actionEvent);
     }
 }
 

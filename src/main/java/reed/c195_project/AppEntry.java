@@ -3,10 +3,9 @@ package reed.c195_project;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import reed.c195_project.util.JDBC;
-import reed.c195_project.util.SceneManager;
+import reed.c195_project.util.LoadScene;
 
 import java.io.IOException;
-import java.util.Locale;
 
 public class AppEntry extends Application {
 
@@ -20,6 +19,6 @@ public class AppEntry extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        SceneManager.setupStage(stage);
+        LoadScene.setupStage(stage);
     }
 }
