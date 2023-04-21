@@ -5,8 +5,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import reed.c195_project.model.Appointment;
-import reed.c195_project.util.SQL;
 import reed.c195_project.util.LoadScene;
+import reed.c195_project.util.SQL;
 import reed.c195_project.util.Validate;
 
 import java.io.IOException;

@@ -19,6 +19,6 @@ public class AppEntry extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        LoadScene.setupStage(stage);
+        LoadScene.login(stage);
     }
 }

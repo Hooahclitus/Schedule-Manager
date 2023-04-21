@@ -12,13 +12,13 @@
       <HBox alignment="CENTER_RIGHT" spacing="8.0">
          <children>
             <Label fx:id="lblUserName" text="userName" />
-            <TextField fx:id="fldUserName" />
+            <TextField fx:id="username" />
          </children>
       </HBox>
       <HBox alignment="CENTER_RIGHT" spacing="8.0">
          <children>
             <Label fx:id="lblPassword" text="password" />
-            <TextField fx:id="fldPassword" />
+            <TextField fx:id="password" />
          </children>
       </HBox>
       <HBox alignment="CENTER" spacing="4.0">
@@ -35,8 +35,8 @@
       </HBox>
       <HBox alignment="CENTER" spacing="10.0">
          <children>
-            <Button fx:id="btnLogin" mnemonicParsing="false" onAction="#login" prefWidth="80.0" text="login" />
-            <Button fx:id="btnExit" mnemonicParsing="false" onAction="#exit" prefWidth="80.0" text="exit" />
+            <Button fx:id="login" mnemonicParsing="false" onAction="#login" prefWidth="80.0" text="login" />
+            <Button fx:id="exit" mnemonicParsing="false" onAction="#exit" prefWidth="80.0" text="exit" />
          </children>
          <VBox.margin>
             <Insets />

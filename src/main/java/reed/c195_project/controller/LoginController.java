@@ -30,13 +30,13 @@ public class LoginController implements Initializable {
     ResourceBundle resourceBundle;
 
     @FXML
-    private TextField fldPassword, fldUserName;
+    private TextField password, username;
 
     @FXML
     private Label lblTimeZone, lblZoneID, lblUserName, lblPassword;
 
     @FXML
-    private Button btnLogin, btnExit;
+    private Button login, exit;
 
     /**
      * Initializes the login form with resource bundle values for various form elements.
@@ -54,14 +54,14 @@ public class LoginController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
 
-        var loginDataMap = Map.of(
-                btnExit, "exit",
-                btnLogin, "login",
+        var loginData = Map.of(
+                exit, "exit",
+                login, "login",
                 lblUserName, "userName",
                 lblPassword, "password",
                 lblTimeZone, "timeZone");
 
-        loginDataMap.forEach((label, string) -> label.setText(resourceBundle.getString(string)));
+        loginData.forEach((label, string) -> label.setText(resourceBundle.getString(string)));
         lblZoneID.setText(ZoneId.systemDefault().toString());
     }
 
@@ -72,7 +72,7 @@ public class LoginController implements Initializable {
      */
     @FXML
     private void login(ActionEvent actionEvent) throws SQLException, IOException {
-        if (Validate.user(fldUserName, fldPassword)) {
+        if (Validate.user(username, password)) {
             LoadScene.schedule(actionEvent);
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -84,6 +84,6 @@ public class LoginController implements Initializable {
 
     @FXML
     private void exit() {
-        LoadScene.exitApplication();
+        LoadScene.exit();
     }
 }

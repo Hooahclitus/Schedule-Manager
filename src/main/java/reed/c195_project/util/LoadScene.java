@@ -19,22 +19,21 @@ import java.util.ResourceBundle;
 public abstract class LoadScene {
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle("rb");
 
-    public static void setupStage(Stage stage) throws IOException {
+    public static <T> void login(T actionEventOrStage) throws IOException {
         FXMLLoader loader = new FXMLLoader(AppEntry.class.getResource("login.fxml"), RESOURCE_BUNDLE);
         Scene scene = new Scene(loader.load());
+        Stage stage = null;
+
+        if (actionEventOrStage instanceof ActionEvent actionEvent) {
+            stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        } else if (actionEventOrStage instanceof Stage s) {
+            stage = s;
+        }
+
         stage.setTitle(RESOURCE_BUNDLE.getString("title"));
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.show();
-    }
-
-    public static void login(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(AppEntry.class.getResource("login.fxml"), RESOURCE_BUNDLE);
-        Scene scene = new Scene(loader.load());
-        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-        stage.setTitle(RESOURCE_BUNDLE.getString("title"));
-        stage.setScene(scene);
-        stage.centerOnScreen();
     }
 
     public static void schedule(ActionEvent actionEvent) throws IOException {
@@ -69,7 +68,7 @@ public abstract class LoadScene {
         stage.centerOnScreen();
     }
 
-    public static void exitApplication() {
+    public static void exit() {
         Platform.exit();
     }
 }
