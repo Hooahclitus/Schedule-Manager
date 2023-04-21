@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public abstract class Validate {
-    public static boolean user(TextField userName, TextField password) throws SQLException {
+    public static boolean userCredentials(TextField userName, TextField password) throws SQLException {
         String sql = "SELECT * FROM USERS WHERE User_Name = ? AND Password = ?";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
         ps.setString(1, userName.getText());
@@ -43,7 +43,7 @@ public abstract class Validate {
                 .anyMatch(Objects::isNull);
     }
 
-    private static void changeTextfieldColorIfLimitExceeded(Map<TextField, Integer> fields) {
+    private static void changeTextFieldColorIfLimitExceeded(Map<TextField, Integer> fields) {
         fields.forEach((fld, lim) -> fld.setStyle("-fx-text-fill: " + (fld.getLength() > lim ? "red" : "black") + ";"));
 
     }
@@ -51,7 +51,7 @@ public abstract class Validate {
     public static void customerInputs(Map<TextField, Integer> fieldsAndLimits, List<ComboBox<Object>> combos,
                                       Button btn) {
         InvalidationListener inputValidation = observable -> {
-            changeTextfieldColorIfLimitExceeded(fieldsAndLimits);
+            changeTextFieldColorIfLimitExceeded(fieldsAndLimits);
 
             btn.setDisable(areTextFieldsValid(fieldsAndLimits) || areComboBoxesValid(combos));
         };
@@ -63,7 +63,7 @@ public abstract class Validate {
     public static void appointmentInputs(Map<TextField, Integer> fieldsAndLimits, List<ComboBox<Object>> combos,
                                          List<DatePicker> dates, Button btn) {
         InvalidationListener inputValidation = observable -> {
-            changeTextfieldColorIfLimitExceeded(fieldsAndLimits);
+            changeTextFieldColorIfLimitExceeded(fieldsAndLimits);
 
             btn.setDisable(areTextFieldsValid(fieldsAndLimits) || areComboBoxesValid(combos) || areDatePickersValid(dates));
         };

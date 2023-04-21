@@ -72,7 +72,7 @@ public class LoginController implements Initializable {
      */
     @FXML
     private void login(ActionEvent actionEvent) throws SQLException, IOException {
-        if (Validate.user(username, password)) {
+        if (Validate.userCredentials(username, password)) {
             LoadScene.schedule(actionEvent);
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
