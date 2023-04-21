@@ -21,7 +21,7 @@ public class CustomerController implements Initializable {
     private TextField fldCustomerID, fldName, fldAddress, fldPostalCode, fldPhoneNumber;
 
     @FXML
-    private ComboBox<Object> comboCountry, comboDivision;
+    private ComboBox<String> comboCountry, comboDivision;
 
     @FXML
     private Button btnAction;
@@ -37,10 +37,10 @@ public class CustomerController implements Initializable {
 
         var comboBoxes = List.of(comboCountry, comboDivision);
 
-        comboCountry.setItems(SQL.selectColumnData("SELECT Country FROM countries", "Country"));
+        comboCountry.setItems(SQL.selectColumnData("SELECT Country FROM countries"));
         comboCountry.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                switch ((String) newValue) {
+                switch (newValue) {
                     case "U.S" -> setDivisionItems(1);
                     case "UK" -> setDivisionItems(2);
                     case "Canada" -> setDivisionItems(3);
@@ -54,7 +54,7 @@ public class CustomerController implements Initializable {
     private void setDivisionItems(int countryId) {
         comboDivision.setDisable(false);
         String query = String.format("SELECT Division FROM first_level_divisions WHERE Country_ID = %d", countryId);
-        comboDivision.setItems(SQL.selectColumnData(query, "Division"));
+        comboDivision.setItems(SQL.selectColumnData(query));
     }
 
     @FXML
@@ -94,7 +94,7 @@ public class CustomerController implements Initializable {
     }
 
     public void populateCustomerFields(Customer customer) {
-        Map<ComboBox<Object>, String> comboBoxMap = Map.of(
+        Map<ComboBox<String>, String> comboBoxMap = Map.of(
                 comboCountry, customer.country(),
                 comboDivision, customer.division()
         );

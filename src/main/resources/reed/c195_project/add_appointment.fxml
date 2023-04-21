@@ -45,7 +45,7 @@
       <HBox fx:id="startDate" alignment="CENTER_RIGHT" spacing="11.0">
          <children>
             <Label text="Start Date" />
-            <DatePicker fx:id="datePickerStart" prefWidth="170.0" />
+            <DatePicker fx:id="datePickerStart" prefWidth="170.0" promptText="MM/DD/YYYY" />
          </children>
       </HBox>
       <HBox fx:id="startTime" alignment="CENTER_RIGHT" spacing="10.0">
@@ -58,7 +58,7 @@
       <HBox fx:id="endDate" alignment="CENTER_RIGHT" spacing="10.0">
          <children>
             <Label text="End Date" />
-            <DatePicker fx:id="datePickerEnd" prefWidth="170.0" />
+            <DatePicker fx:id="datePickerEnd" prefWidth="170.0" promptText="MM/DD/YYYY" />
          </children>
       </HBox>
       <HBox fx:id="endTime" alignment="CENTER_RIGHT" spacing="10.0">

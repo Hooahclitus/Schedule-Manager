@@ -15,37 +15,4 @@ public record Appointment(int appointmentID,
                           LocalTime endTime,
                           String customerID,
                           String userID) {
-
-    public int getHour() {
-        return this.startTime.getHour();
-    }
-
-    public int getMinute() {
-        return this.startTime.getMinute();
-    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

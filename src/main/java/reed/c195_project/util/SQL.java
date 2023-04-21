@@ -5,9 +5,12 @@ import javafx.collections.ObservableList;
 import reed.c195_project.model.Appointment;
 import reed.c195_project.model.Customer;
 
+import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.ZoneId;
+import java.util.Locale;
 import java.util.Map;
 
 public abstract class SQL {
@@ -68,13 +71,12 @@ public abstract class SQL {
         return appointments;
     }
 
-    // todo remove redundant field param as it is in the sql code. Figure out how to parse it from the sql statement
-    public static ObservableList<Object> selectColumnData(String sql, String field) {
-        ObservableList<Object> fieldList = FXCollections.observableArrayList();
+    public static ObservableList<String> selectColumnData(String sql) {
+        ObservableList<String> fieldList = FXCollections.observableArrayList();
         try {
             ResultSet resultSet = JDBC.connection.createStatement().executeQuery(sql);
             while (resultSet.next()) {
-                fieldList.add(resultSet.getString(field));
+                fieldList.add(resultSet.getString(sql.substring("SELECT".length() + 1, sql.indexOf("FROM") - 1)));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -82,7 +84,7 @@ public abstract class SQL {
         return fieldList;
     }
 
-    public static void updateTableData(String sql, Map<Integer, Object> maps) throws SQLException {
+    public static void updateTableData(String sql, Map<Integer, ?> maps) throws SQLException {
         PreparedStatement preparedStatement = JDBC.connection.prepareStatement(sql);
 
         maps.forEach((index, val) -> {
