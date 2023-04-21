@@ -18,29 +18,20 @@ import java.util.ResourceBundle;
 
 public class CustomerController implements Initializable {
     @FXML
-    private TextField fldCustomerID, fldName, fldAddress, fldPostalCode, fldPhoneNumber;
+    private TextField customerID, name, address, postalCode, phoneNumber;
 
     @FXML
-    private ComboBox<String> comboCountry, comboDivision;
+    private ComboBox<Object> country, division;
 
     @FXML
-    private Button btnAction;
+    private Button submit;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        var fieldsAndLimits = Map.of(
-                fldName, 50,
-                fldAddress, 100,
-                fldPostalCode, 50,
-                fldPhoneNumber, 50
-        );
-
-        var comboBoxes = List.of(comboCountry, comboDivision);
-
-        comboCountry.setItems(SQL.selectColumnData("SELECT Country FROM countries"));
-        comboCountry.valueProperty().addListener((observable, oldValue, newValue) -> {
+        country.setItems(SQL.selectColumnData("SELECT Country FROM countries ORDER BY Country"));
+        country.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                switch (newValue) {
+                switch ((String) newValue) {
                     case "U.S" -> setDivisionItems(1);
                     case "UK" -> setDivisionItems(2);
                     case "Canada" -> setDivisionItems(3);
@@ -48,67 +39,71 @@ public class CustomerController implements Initializable {
             }
         });
 
-        Validate.customerInputs(fieldsAndLimits, comboBoxes, btnAction);
+        var fieldsAndLimits = Map.of(name, 50, address, 100, postalCode, 50, phoneNumber, 50);
+        var combos = List.of(country, division);
+
+        Validate.customerInputs(fieldsAndLimits, combos, submit);
     }
 
     private void setDivisionItems(int countryId) {
-        comboDivision.setDisable(false);
-        String query = String.format("SELECT Division FROM first_level_divisions WHERE Country_ID = %d", countryId);
-        comboDivision.setItems(SQL.selectColumnData(query));
+        String sql = "SELECT Division FROM first_level_divisions WHERE Country_ID = %d ORDER BY Divison";
+        String query = String.format(sql, countryId);
+        division.setItems(SQL.selectColumnData(query));
+        division.setDisable(false);
     }
 
     @FXML
     private void insertCustomer(ActionEvent actionEvent) throws SQLException, IOException {
-        Map<Integer, Object> customerDataMap = Map.of(
-                1, fldName.getText(),
-                2, fldAddress.getText(),
-                3, fldPostalCode.getText(),
-                4, fldPhoneNumber.getText(),
-                5, comboDivision.getSelectionModel().getSelectedItem()
+        Map<Integer, Object> customerData = Map.of(
+                1, name.getText(),
+                2, address.getText(),
+                3, postalCode.getText(),
+                4, phoneNumber.getText(),
+                5, division.getSelectionModel().getSelectedItem()
         );
 
         String sql = "INSERT INTO customers (Customer_Name, Address, Postal_Code, Phone, Division_ID) " +
                 "VALUES (?, ?, ?, ?, (SELECT Division_ID FROM first_level_divisions WHERE Division = ?))";
 
-        SQL.updateTableData(sql, customerDataMap);
+        SQL.updateTableData(sql, customerData);
         SceneManager.loadScheduleScene(actionEvent);
     }
 
     @FXML
     private void updateCustomer(ActionEvent actionEvent) throws SQLException, IOException {
-        Map<Integer, Object> customerDataMap = Map.of(
-                1, fldName.getText(),
-                2, fldAddress.getText(),
-                3, fldPostalCode.getText(),
-                4, fldPhoneNumber.getText(),
-                5, comboDivision.getSelectionModel().getSelectedItem(),
-                6, fldCustomerID.getText()
+        Map<Integer, Object> customerData = Map.of(
+                1, name.getText(),
+                2, address.getText(),
+                3, postalCode.getText(),
+                4, phoneNumber.getText(),
+                5, division.getSelectionModel().getSelectedItem(),
+                6, customerID.getText()
         );
 
         String sql = "UPDATE customers SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?, " +
                 "Division_ID = (SELECT Division_ID FROM first_level_divisions WHERE Division = ?) " +
                 "WHERE Customer_ID = ?";
 
-        SQL.updateTableData(sql, customerDataMap);
+        SQL.updateTableData(sql, customerData);
         SceneManager.loadScheduleScene(actionEvent);
     }
 
-    public void populateCustomerFields(Customer customer) {
-        Map<ComboBox<String>, String> comboBoxMap = Map.of(
-                comboCountry, customer.country(),
-                comboDivision, customer.division()
+    public void loadCustomerDataIntoForm(Customer customer) {
+        Map<TextField, String> fields = Map.of(
+                customerID, String.valueOf(customer.customerID()),
+                name, customer.name(),
+                address, customer.address(),
+                postalCode, customer.postalCode(),
+                phoneNumber, customer.phoneNumber()
         );
 
-        Map<TextField, String> textFieldMap = Map.of(
-                fldCustomerID, String.valueOf(customer.customerID()),
-                fldName, customer.name(),
-                fldAddress, customer.address(),
-                fldPostalCode, customer.postalCode(),
-                fldPhoneNumber, customer.phoneNumber()
+        Map<ComboBox<Object>, String> combos = Map.of(
+                country, customer.country(),
+                division, customer.division()
         );
 
-        comboBoxMap.forEach(ComboBoxBase::setValue);
-        textFieldMap.forEach(TextInputControl::setText);
+        fields.forEach(TextInputControl::setText);
+        combos.forEach(ComboBoxBase::setValue);
     }
 
     @FXML

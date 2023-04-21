@@ -9,48 +9,48 @@
       <HBox alignment="CENTER_RIGHT" spacing="10.0">
          <children>
             <Label text="Customer ID" />
-            <TextField fx:id="fldCustomerID" disable="true" prefWidth="170.0" text="Auto-Generated" />
+            <TextField fx:id="customerID" disable="true" prefWidth="170.0" text="Auto-Generated" />
          </children>
       </HBox>
       <HBox alignment="CENTER_RIGHT" spacing="10.0">
          <children>
             <Label text="Name" />
-            <TextField fx:id="fldName" prefWidth="170.0" />
+            <TextField fx:id="name" prefWidth="170.0" />
          </children>
       </HBox>
       <HBox alignment="CENTER_RIGHT" spacing="10.0">
          <children>
             <Label text="Address" />
-            <TextField fx:id="fldAddress" prefWidth="170.0" />
+            <TextField fx:id="address" prefWidth="170.0" />
          </children>
       </HBox>
       <HBox alignment="CENTER_RIGHT" spacing="10.0">
          <children>
             <Label text="Country" />
-            <ComboBox fx:id="comboCountry" prefWidth="170.0" />
+            <ComboBox fx:id="country" prefWidth="170.0" />
          </children>
       </HBox>
       <HBox alignment="CENTER_RIGHT" spacing="10.0">
          <children>
             <Label text="Division" />
-            <ComboBox fx:id="comboDivision" disable="true" prefWidth="170.0" />
+            <ComboBox fx:id="division" disable="true" prefWidth="170.0" />
          </children>
       </HBox>
       <HBox alignment="CENTER_RIGHT" spacing="10.0">
          <children>
             <Label text="Postal Code" />
-            <TextField fx:id="fldPostalCode" prefWidth="170.0" />
+            <TextField fx:id="postalCode" prefWidth="170.0" />
          </children>
       </HBox>
       <HBox alignment="CENTER_RIGHT" spacing="10.0">
          <children>
             <Label text="Phone" />
-            <TextField fx:id="fldPhoneNumber" prefWidth="170.0" />
+            <TextField fx:id="phoneNumber" prefWidth="170.0" />
          </children>
       </HBox>
       <HBox alignment="CENTER" spacing="10.0">
          <children>
-            <Button fx:id="btnAction" disable="true" mnemonicParsing="false" onAction="#insertCustomer" prefWidth="75.0" text="Add" />
+            <Button fx:id="submit" disable="true" mnemonicParsing="false" onAction="#insertCustomer" prefWidth="75.0" text="Add" />
             <Button mnemonicParsing="false" onAction="#cancel" prefWidth="75.0" text="Cancel" />
          </children>
          <padding>

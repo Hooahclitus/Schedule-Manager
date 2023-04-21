@@ -71,8 +71,8 @@ public abstract class SQL {
         return appointments;
     }
 
-    public static ObservableList<String> selectColumnData(String sql) {
-        ObservableList<String> fieldList = FXCollections.observableArrayList();
+    public static ObservableList<Object> selectColumnData(String sql) {
+        ObservableList<Object> fieldList = FXCollections.observableArrayList();
         try {
             ResultSet resultSet = JDBC.connection.createStatement().executeQuery(sql);
             while (resultSet.next()) {

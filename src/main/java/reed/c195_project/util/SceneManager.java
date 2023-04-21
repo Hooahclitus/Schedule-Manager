@@ -57,7 +57,7 @@ public abstract class SceneManager {
         Parent root = loader.load();
 
         AppointmentController appointmentController = loader.getController();
-        appointmentController.populateAppointmentFields(appointment);
+        appointmentController.loadAppointmentDataIntoForm(appointment);
 
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root));
@@ -76,7 +76,7 @@ public abstract class SceneManager {
         Parent root = loader.load();
 
         CustomerController customerController = loader.getController();
-        customerController.populateCustomerFields(customer);
+        customerController.loadCustomerDataIntoForm(customer);
 
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root));
