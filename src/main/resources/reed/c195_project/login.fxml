@@ -1,52 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<VBox spacing="8.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="reed.c195_project.controller.LoginController">
-   <children>
-      <HBox alignment="CENTER_RIGHT" spacing="8.0">
-         <children>
-            <Label fx:id="lblUserName" text="userName" />
-            <TextField fx:id="username" />
-         </children>
-      </HBox>
-      <HBox alignment="CENTER_RIGHT" spacing="8.0">
-         <children>
-            <Label fx:id="lblPassword" text="password" />
-            <TextField fx:id="password" />
-         </children>
-      </HBox>
-      <HBox alignment="CENTER" spacing="4.0">
-         <children>
-            <Label fx:id="lblTimeZone" text="timeZone">
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin></Label>
-            <Label fx:id="lblZoneID" text="zoneID" />
-         </children>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-      </HBox>
-      <HBox alignment="CENTER" spacing="10.0">
-         <children>
-            <Button fx:id="login" mnemonicParsing="false" onAction="#login" prefWidth="80.0" text="login" />
-            <Button fx:id="exit" mnemonicParsing="false" onAction="#exit" prefWidth="80.0" text="exit" />
-         </children>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-         <padding>
-            <Insets top="2.0" />
-         </padding>
-      </HBox>
-   </children>
-   <padding>
-      <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
-   </padding>
+<VBox spacing="8.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="reed.c195_project.controller.LoginController">
+    <padding>
+        <Insets bottom="14.0" left="14.0" right="14.0" top="14.0"/>
+    </padding>
+    <HBox alignment="CENTER_RIGHT" spacing="8.0">
+        <Label fx:id="lblUserName" text="userName"/>
+        <TextField fx:id="username"/>
+    </HBox>
+    <HBox alignment="CENTER_RIGHT" spacing="8.0">
+        <Label fx:id="lblPassword" text="password"/>
+        <TextField fx:id="password"/>
+    </HBox>
+    <HBox alignment="CENTER" spacing="4.0">
+        <VBox.margin>
+            <Insets/>
+        </VBox.margin>
+        <Label fx:id="lblTimeZone" text="timeZone">
+            <HBox.margin>
+                <Insets/>
+            </HBox.margin>
+        </Label>
+        <Label fx:id="lblZoneID" text="zoneID"/>
+    </HBox>
+    <HBox alignment="CENTER" spacing="10.0">
+        <VBox.margin>
+            <Insets/>
+        </VBox.margin>
+        <padding>
+            <Insets top="2.0"/>
+        </padding>
+        <Button fx:id="login" mnemonicParsing="false" onAction="#login" prefWidth="80.0" text="login"/>
+        <Button fx:id="exit" mnemonicParsing="false" onAction="#exit" prefWidth="80.0" text="exit"/>
+    </HBox>
 </VBox>
