@@ -5,9 +5,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import reed.c195_project.model.Customer;
-import reed.c195_project.util.JDBC;
-import reed.c195_project.util.LoadScene;
-import reed.c195_project.util.Validate;
+import reed.c195_project.utils.JDBC;
+import reed.c195_project.utils.LoadScene;
+import reed.c195_project.utils.Validate;
 
 import java.io.IOException;
 import java.net.URL;

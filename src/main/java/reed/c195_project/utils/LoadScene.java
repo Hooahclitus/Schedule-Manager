@@ -1,4 +1,4 @@
-package reed.c195_project.util;
+package reed.c195_project.utils;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;

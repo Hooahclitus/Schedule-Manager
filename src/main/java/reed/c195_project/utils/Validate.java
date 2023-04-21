@@ -1,4 +1,4 @@
-package reed.c195_project.util;
+package reed.c195_project.utils;
 
 import javafx.beans.InvalidationListener;
 import javafx.scene.control.*;

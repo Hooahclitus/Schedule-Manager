@@ -2,8 +2,8 @@ package reed.c195_project;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import reed.c195_project.util.JDBC;
-import reed.c195_project.util.LoadScene;
+import reed.c195_project.utils.JDBC;
+import reed.c195_project.utils.LoadScene;
 
 import java.io.IOException;
 

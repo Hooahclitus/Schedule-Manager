@@ -11,8 +11,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import reed.c195_project.model.Appointment;
 import reed.c195_project.model.Customer;
-import reed.c195_project.util.JDBC;
-import reed.c195_project.util.LoadScene;
+import reed.c195_project.utils.JDBC;
+import reed.c195_project.utils.LoadScene;
 
 import java.io.IOException;
 import java.net.URL;

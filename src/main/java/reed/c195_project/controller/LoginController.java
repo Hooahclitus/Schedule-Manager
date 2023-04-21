@@ -7,8 +7,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import reed.c195_project.util.LoadScene;
-import reed.c195_project.util.Validate;
+import reed.c195_project.utils.LoadScene;
+import reed.c195_project.utils.Validate;
 
 import java.io.IOException;
 import java.net.URL;
