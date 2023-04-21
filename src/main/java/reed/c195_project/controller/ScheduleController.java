@@ -11,8 +11,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import reed.c195_project.model.Appointment;
 import reed.c195_project.model.Customer;
+import reed.c195_project.util.JDBC;
 import reed.c195_project.util.LoadScene;
-import reed.c195_project.util.SQL;
 
 import java.io.IOException;
 import java.net.URL;
@@ -48,8 +48,8 @@ public class ScheduleController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.customers = SQL.selectCustomerRecords();
-        this.appointments = SQL.selectAppointmentRecords();
+        this.customers = JDBC.selectCustomerRecords();
+        this.appointments = JDBC.selectAppointmentRecords();
 
         setupCustomersTable();
         setupAppointmentsTable();
@@ -134,8 +134,8 @@ public class ScheduleController implements Initializable {
         var sql = "DELETE FROM appointments WHERE Appointment_ID = ?";
         var recordID = tblAppointments.getSelectionModel().getSelectedItem().appointmentID();
 
-        SQL.deleteRecord(sql, recordID);
-        tblAppointments.setItems(SQL.selectAppointmentRecords());
+        JDBC.deleteRecord(sql, recordID);
+        tblAppointments.setItems(JDBC.selectAppointmentRecords());
     }
 
     @FXML
@@ -153,8 +153,8 @@ public class ScheduleController implements Initializable {
         var sql = "DELETE FROM customers WHERE Customer_ID = ?";
         var recordID = tblCustomers.getSelectionModel().getSelectedItem().customerID();
 
-        SQL.deleteRecord(sql, recordID);
-        tblCustomers.setItems(SQL.selectCustomerRecords());
+        JDBC.deleteRecord(sql, recordID);
+        tblCustomers.setItems(JDBC.selectCustomerRecords());
     }
 
     @FXML

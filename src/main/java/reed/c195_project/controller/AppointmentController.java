@@ -5,8 +5,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import reed.c195_project.model.Appointment;
+import reed.c195_project.util.JDBC;
 import reed.c195_project.util.LoadScene;
-import reed.c195_project.util.SQL;
 import reed.c195_project.util.Validate;
 
 import java.io.IOException;
@@ -42,9 +42,9 @@ public class AppointmentController implements Initializable {
         Stream.of(startHour, endHour).forEach(e -> e.setItems(observableList(rangeClosed(0, 23).boxed().collect(toList()))));
         Stream.of(startMinute, endMinute).forEach(e -> e.setItems(observableList(rangeClosed(0, 59).boxed().collect(toList()))));
 
-        contacts.setItems(SQL.selectColumnData("SELECT Contact_Name FROM contacts ORDER BY Contact_Name"));
-        customerID.setItems(SQL.selectColumnData("SELECT Customer_ID FROM customers ORDER BY Customer_ID"));
-        userID.setItems(SQL.selectColumnData("SELECT User_ID FROM users ORDER BY User_ID"));
+        contacts.setItems(JDBC.selectFieldData("SELECT Contact_Name FROM contacts ORDER BY Contact_Name"));
+        customerID.setItems(JDBC.selectFieldData("SELECT Customer_ID FROM customers ORDER BY Customer_ID"));
+        userID.setItems(JDBC.selectFieldData("SELECT User_ID FROM users ORDER BY User_ID"));
 
         var fieldsAndLimits = Map.of(title, 50, description, 50, location, 50, type, 50);
         var combos = List.of(contacts, customerID, userID, startHour, startMinute, endHour, endMinute);
@@ -76,7 +76,7 @@ public class AppointmentController implements Initializable {
                 "Contact_ID) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, (SELECT Contact_ID FROM contacts WHERE Contact_Name = ?))";
 
-        SQL.updateTableData(sql, appointmentData);
+        JDBC.updateTable(sql, appointmentData);
         LoadScene.schedule(actionEvent);
     }
 
@@ -98,7 +98,7 @@ public class AppointmentController implements Initializable {
                 "Customer_ID = ?, User_ID = ?, " +
                 "Contact_ID = (SELECT Contact_ID FROM contacts WHERE Contact_Name = ?) WHERE Appointment_ID = ?";
 
-        SQL.updateTableData(sql, appointmentData);
+        JDBC.updateTable(sql, appointmentData);
         LoadScene.schedule(actionEvent);
     }
 

@@ -5,8 +5,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import reed.c195_project.model.Customer;
+import reed.c195_project.util.JDBC;
 import reed.c195_project.util.LoadScene;
-import reed.c195_project.util.SQL;
 import reed.c195_project.util.Validate;
 
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class CustomerController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        country.setItems(SQL.selectColumnData("SELECT Country FROM countries ORDER BY Country"));
+        country.setItems(JDBC.selectFieldData("SELECT Country FROM countries ORDER BY Country"));
         country.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 switch ((String) newValue) {
@@ -48,7 +48,7 @@ public class CustomerController implements Initializable {
     private void setDivisionItems(int countryId) {
         String sql = "SELECT Division FROM first_level_divisions WHERE Country_ID = %d ORDER BY Division";
         String query = String.format(sql, countryId);
-        division.setItems(SQL.selectColumnData(query));
+        division.setItems(JDBC.selectFieldData(query));
         division.setDisable(false);
     }
 
@@ -64,7 +64,7 @@ public class CustomerController implements Initializable {
         String sql = "INSERT INTO customers (Customer_Name, Address, Postal_Code, Phone, Division_ID) " +
                 "VALUES (?, ?, ?, ?, (SELECT Division_ID FROM first_level_divisions WHERE Division = ?))";
 
-        SQL.updateTableData(sql, customerData);
+        JDBC.updateTable(sql, customerData);
         LoadScene.schedule(actionEvent);
     }
 
@@ -82,7 +82,7 @@ public class CustomerController implements Initializable {
                 "Division_ID = (SELECT Division_ID FROM first_level_divisions WHERE Division = ?) " +
                 "WHERE Customer_ID = ?";
 
-        SQL.updateTableData(sql, customerData);
+        JDBC.updateTable(sql, customerData);
         LoadScene.schedule(actionEvent);
     }
 
