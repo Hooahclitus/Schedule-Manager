@@ -1,7 +1,6 @@
 package reed.c195_project.model;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 public record Appointment(int appointmentID,
                           String title,
@@ -9,10 +8,12 @@ public record Appointment(int appointmentID,
                           String location,
                           String contact,
                           String type,
-                          LocalDate startDate,
-                          LocalTime startTime,
-                          LocalDate endDate,
-                          LocalTime endTime,
+                          LocalDateTime start,
+                          LocalDateTime end,
+//                          LocalDate startDate,
+//                          LocalTime startTime,
+//                          LocalDate endDate,
+//                          LocalTime endTime,
                           String customerID,
                           String userID) {
 }

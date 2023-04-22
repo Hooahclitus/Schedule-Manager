@@ -4,54 +4,43 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-         tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-         fx:controller="reed.c195_project.controller.ScheduleController">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="reed.c195_project.controller.ScheduleController">
     <Tab fx:id="tbAppointments" text="Appointments">
         <AnchorPane minHeight="0.0" minWidth="0.0">
             <VBox spacing="10.0">
                 <padding>
-                    <Insets bottom="14.0" left="14.0" right="14.0" top="14.0"/>
+                    <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
                 </padding>
                 <HBox>
-                    <ComboBox fx:id="comboAppointmentsFilter" prefWidth="150.0" promptText="Filter By"/>
-                    <TextField fx:id="fldAppointmentsSearch" prefWidth="200.0"
-                               promptText="Search Appointments">
+                    <ComboBox fx:id="comboAppointmentsFilter" prefWidth="150.0" promptText="Filter By" />
+                    <TextField fx:id="fldAppointmentsSearch" prefWidth="200.0" promptText="Search Appointments">
                         <HBox.margin>
-                            <Insets left="665.0"/>
+                            <Insets left="665.0" />
                         </HBox.margin>
                     </TextField>
                 </HBox>
                 <TableView fx:id="tblAppointments" prefWidth="1015.0">
                     <columns>
-                        <TableColumn fx:id="colAppointmentID" minWidth="-1.0" prefWidth="100.0"
-                                     text="Appointment ID"/>
-                        <TableColumn fx:id="colAppointmentTitle" text="Title"/>
-                        <TableColumn fx:id="colAppointmentDescription" prefWidth="250.0"
-                                     text="Description"/>
-                        <TableColumn fx:id="colAppointmentLocation" text="Location"/>
-                        <TableColumn fx:id="colAppointmentContact" text="Contact"/>
-                        <TableColumn fx:id="colAppointmentType" text="Type"/>
-                        <TableColumn fx:id="colAppointmentStartDate" text="Start Date"/>
-                        <TableColumn fx:id="colAppointmentStartTime" text="Start Time"/>
-                        <TableColumn fx:id="colAppointmentEndDate" text="End Date"/>
-                        <TableColumn fx:id="colAppointmentEndTime" text="End Time"/>
-                        <TableColumn fx:id="colAppointmentCustomerID" text="Customer ID"/>
-                        <TableColumn fx:id="colAppointmentUserID" prefWidth="55.0" text="User ID"/>
+                        <TableColumn fx:id="colAppointmentID" minWidth="-1.0" prefWidth="100.0" text="Appointment ID" />
+                        <TableColumn fx:id="colAppointmentTitle" text="Title" />
+                        <TableColumn fx:id="colAppointmentDescription" prefWidth="250.0" text="Description" />
+                        <TableColumn fx:id="colAppointmentLocation" text="Location" />
+                        <TableColumn fx:id="colAppointmentContact" text="Contact" />
+                        <TableColumn fx:id="colAppointmentType" text="Type" />
+                        <TableColumn fx:id="colAppointmentStart" prefWidth="150.0" text="Start Date/Time" />
+                        <TableColumn fx:id="colAppointmentEnd" prefWidth="150.0" text="End Date/Time" />
+                        <TableColumn fx:id="colAppointmentCustomerID" text="Customer ID" />
+                        <TableColumn fx:id="colAppointmentUserID" prefWidth="55.0" text="User ID" />
                     </columns>
                 </TableView>
                 <HBox fx:id="buttons" alignment="CENTER" spacing="10.0">
                     <padding>
-                        <Insets top="2.0"/>
+                        <Insets top="2.0" />
                     </padding>
-                    <Button fx:id="btnAddAppointment" mnemonicParsing="false" onAction="#addAppointment"
-                            prefWidth="75.0" text="Add"/>
-                    <Button fx:id="btnModifyAppointment" mnemonicParsing="false"
-                            onAction="#modifyAppointment" prefWidth="75.0" text="Modify"/>
-                    <Button fx:id="btnDeleteAppointment" mnemonicParsing="false"
-                            onAction="#deleteAppointment" prefWidth="75.0" text="Delete"/>
-                    <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#logout"
-                            prefWidth="75.0" text="Logout"/>
+                    <Button fx:id="btnAddAppointment" mnemonicParsing="false" onAction="#addAppointment" prefWidth="75.0" text="Add" />
+                    <Button fx:id="btnModifyAppointment" mnemonicParsing="false" onAction="#modifyAppointment" prefWidth="75.0" text="Modify" />
+                    <Button fx:id="btnDeleteAppointment" mnemonicParsing="false" onAction="#deleteAppointment" prefWidth="75.0" text="Delete" />
+                    <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#logout" prefWidth="75.0" text="Logout" />
                 </HBox>
             </VBox>
         </AnchorPane>
@@ -60,42 +49,36 @@
         <AnchorPane>
             <VBox spacing="10.0">
                 <padding>
-                    <Insets bottom="14.0" left="14.0" right="14.0" top="14.0"/>
+                    <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
                 </padding>
                 <HBox spacing="10.0">
-                    <ComboBox fx:id="comboCountryFilter" prefWidth="150.0"
-                              promptText="Filter By Country"/>
-                    <ComboBox fx:id="comboDivisionFilter" prefWidth="150.0"
-                              promptText="Filter By Division"/>
-                    <TextField fx:id="fldCustomersSearch" prefWidth="200.0"
-                               promptText="Search Customers">
+                    <ComboBox fx:id="comboCountryFilter" prefWidth="150.0" promptText="Filter By Country" />
+                    <ComboBox fx:id="comboDivisionFilter" prefWidth="150.0" promptText="Filter By Division" />
+                    <TextField fx:id="fldCustomersSearch" prefWidth="200.0" promptText="Search Customers">
                         <HBox.margin>
-                            <Insets left="495.0"/>
+                            <Insets left="495.0" />
                         </HBox.margin>
                     </TextField>
                 </HBox>
                 <TableView fx:id="tblCustomers" prefWidth="1015.0">
                     <columns>
-                        <TableColumn fx:id="colCustomerID" text="Customer ID"/>
-                        <TableColumn fx:id="colCustomerName" prefWidth="155.0" text="Name"/>
-                        <TableColumn fx:id="colCustomerAddress" prefWidth="300.0" text="Address"/>
-                        <TableColumn fx:id="colCustomerCountry" prefWidth="100.0" text="Country"/>
-                        <TableColumn fx:id="colCustomerDivision" prefWidth="150.0" text="Division"/>
-                        <TableColumn fx:id="colCustomerPostal" text="Postal Code"/>
-                        <TableColumn fx:id="colCustomerPhone" prefWidth="150.0" text="Phone Number"/>
+                        <TableColumn fx:id="colCustomerID" text="Customer ID" />
+                        <TableColumn fx:id="colCustomerName" prefWidth="155.0" text="Name" />
+                        <TableColumn fx:id="colCustomerAddress" prefWidth="300.0" text="Address" />
+                        <TableColumn fx:id="colCustomerCountry" prefWidth="100.0" text="Country" />
+                        <TableColumn fx:id="colCustomerDivision" prefWidth="150.0" text="Division" />
+                        <TableColumn fx:id="colCustomerPostal" text="Postal Code" />
+                        <TableColumn fx:id="colCustomerPhone" prefWidth="150.0" text="Phone Number" />
                     </columns>
                 </TableView>
                 <HBox alignment="CENTER" spacing="10.0">
                     <padding>
-                        <Insets top="2.0"/>
+                        <Insets top="2.0" />
                     </padding>
-                    <Button mnemonicParsing="false" onAction="#addCustomer" prefWidth="75.0"
-                            text="Add"/>
-                    <Button mnemonicParsing="false" onAction="#modifyCustomer" prefWidth="75.0"
-                            text="Modify"/>
-                    <Button mnemonicParsing="false" onAction="#deleteCustomer" prefWidth="75.0"
-                            text="Delete"/>
-                    <Button mnemonicParsing="false" onAction="#logout" prefWidth="75.0" text="Logout"/>
+                    <Button mnemonicParsing="false" onAction="#addCustomer" prefWidth="75.0" text="Add" />
+                    <Button mnemonicParsing="false" onAction="#modifyCustomer" prefWidth="75.0" text="Modify" />
+                    <Button mnemonicParsing="false" onAction="#deleteCustomer" prefWidth="75.0" text="Delete" />
+                    <Button mnemonicParsing="false" onAction="#logout" prefWidth="75.0" text="Logout" />
                 </HBox>
             </VBox>
         </AnchorPane>

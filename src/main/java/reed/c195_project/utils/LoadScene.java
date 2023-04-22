@@ -1,6 +1,8 @@
 package reed.c195_project.utils;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -44,12 +46,13 @@ public abstract class LoadScene {
         stage.centerOnScreen();
     }
 
-    public static void appointment(ActionEvent actionEvent, Appointment... appointment) throws IOException {
+    public static void appointment(ActionEvent actionEvent, ObservableList<Appointment> appointments, Appointment... appointment) throws IOException {
         FXMLLoader loader = new FXMLLoader(AppEntry.class.getResource("appointment.fxml"));
         Parent root = loader.load();
 
         AppointmentController appointmentController = loader.getController();
         appointmentController.configureAppointmentForm(appointment);
+        appointmentController.passAppointments(appointments);
 
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root));

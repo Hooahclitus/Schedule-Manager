@@ -1,15 +1,14 @@
 package reed.c195_project.utils;
 
 import javafx.beans.InvalidationListener;
+import javafx.collections.ObservableList;
 import javafx.scene.control.*;
+import reed.c195_project.model.Appointment;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -35,8 +34,12 @@ public abstract class Validate {
         return zonedTime.isAfter(businessStart) && zonedTime.isBefore(businessEnd);
     }
 
-    public static boolean appointmentTimes(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    public static boolean isAppointmentWithinBusinessHours(LocalDateTime startDateTime, LocalDateTime endDateTime) {
         return Validate.appointmentTime(startDateTime) && Validate.appointmentTime(endDateTime);
+    }
+
+    public static List<Appointment> isAppointmentOverlapping(ObservableList<Appointment> appointments, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        return appointments.stream().filter(e -> e.start().isBefore(endDateTime) && e.end().isAfter(startDateTime)).toList();
     }
 
     private static boolean areTextFieldsValid(Map<TextField, Integer> textFields) {

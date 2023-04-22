@@ -81,10 +81,8 @@ public abstract class JDBC {
                         resultSet.getString("Location"),
                         resultSet.getString("Contact_Name"),
                         resultSet.getString("Type"),
-                        resultSet.getTimestamp("Start").toLocalDateTime().toLocalDate(),
-                        resultSet.getTimestamp("Start").toLocalDateTime().toLocalTime(),
-                        resultSet.getTimestamp("End").toLocalDateTime().toLocalDate(),
-                        resultSet.getTimestamp("End").toLocalDateTime().toLocalTime(),
+                        resultSet.getTimestamp("Start").toLocalDateTime(),
+                        resultSet.getTimestamp("End").toLocalDateTime(),
                         resultSet.getString("Customer_ID"),
                         resultSet.getString("User_ID")
                 ));

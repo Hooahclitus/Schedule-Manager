@@ -1,5 +1,6 @@
 package reed.c195_project.controller;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,6 +16,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +28,8 @@ import static java.util.stream.IntStream.rangeClosed;
 import static javafx.collections.FXCollections.observableList;
 
 public class AppointmentController implements Initializable {
+    private ObservableList<Appointment> appointments;
+
     @FXML
     private DatePicker startDate, endDate;
 
@@ -69,6 +73,31 @@ public class AppointmentController implements Initializable {
         alert.showAndWait();
     }
 
+    private void conflictingAppointmentsAlert(List<Appointment> appointments) {
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
+
+        List<String> conflictingAppointments = appointments.stream()
+                .map(appointment -> String.format("Appointment ID: %d, Date: %s, Time: %s - %s",
+                        appointment.appointmentID(),
+                        appointment.start().format(dateFormat),
+                        appointment.start().format(timeFormat),
+                        appointment.end().format(timeFormat)))
+                .toList();
+
+        String appointmentDetails = String.join("\n", conflictingAppointments);
+
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Scheduling Conflict");
+        alert.setHeaderText("Unable to Schedule Appointment");
+        alert.setContentText("The appointment time conflicts with the following appointments:\n\n" + appointmentDetails + "\n\nPlease select a different time slot.");
+        alert.showAndWait();
+    }
+
+    public void passAppointments(ObservableList<Appointment> appointments) {
+        this.appointments = appointments;
+    }
+
     public void configureAppointmentForm(Appointment... appointment) {
         switch (appointment.length) {
             case 0 -> {
@@ -95,15 +124,15 @@ public class AppointmentController implements Initializable {
                 contacts, appointment.contact(),
                 customerID, appointment.customerID(),
                 userID, appointment.userID(),
-                startHour, appointment.startTime().getHour(),
-                startMinute, appointment.startTime().getMinute(),
-                endHour, appointment.endTime().getHour(),
-                endMinute, appointment.endTime().getMinute()
+                startHour, appointment.start().getHour(),
+                startMinute, appointment.start().getMinute(),
+                endHour, appointment.end().getHour(),
+                endMinute, appointment.end().getMinute()
         );
 
         var dates = Map.of(
-                startDate, appointment.startDate(),
-                endDate, appointment.endDate()
+                startDate, appointment.start().toLocalDate(),
+                endDate, appointment.end().toLocalDate()
         );
 
         fields.forEach(TextInputControl::setText);
@@ -126,6 +155,18 @@ public class AppointmentController implements Initializable {
         var startDateTime = convertToLocalDateTime(startDate, startHour, startMinute);
         var endDateTime = convertToLocalDateTime(endDate, endHour, endMinute);
 
+        if (!Validate.isAppointmentWithinBusinessHours(startDateTime, endDateTime)) {
+            this.businessHoursAlert();
+            return;
+        }
+
+        var conflictingAppointments = Validate.isAppointmentOverlapping(appointments, startDateTime, endDateTime);
+
+        if (!conflictingAppointments.isEmpty()) {
+            conflictingAppointmentsAlert(conflictingAppointments);
+            return;
+        }
+
         Map<Integer, Object> appointmentData = new HashMap<>();
         appointmentData.put(1, title.getText());
         appointmentData.put(2, description.getText());
@@ -136,11 +177,6 @@ public class AppointmentController implements Initializable {
         appointmentData.put(7, customerID.getValue());
         appointmentData.put(8, userID.getValue());
         appointmentData.put(9, contacts.getValue());
-
-        if (!Validate.appointmentTimes(startDateTime, endDateTime)) {
-            businessHoursAlert();
-            return;
-        }
 
         if (submit.getText().equals("Update")) {
             appointmentData.put(10, appointmentID.getText());

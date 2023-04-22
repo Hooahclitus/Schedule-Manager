@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
 import java.util.Map;
@@ -40,8 +41,7 @@ public class ScheduleController implements Initializable {
     @FXML
     private TableColumn<Appointment, Object> colAppointmentID, colAppointmentCustomerID, colAppointmentUserID,
             colAppointmentTitle, colAppointmentDescription, colAppointmentLocation, colAppointmentContact,
-            colAppointmentType, colAppointmentStartDate, colAppointmentEndDate, colAppointmentStartTime,
-            colAppointmentEndTime;
+            colAppointmentType, colAppointmentStart, colAppointmentEnd;
 
     @FXML
     private ComboBox<String> comboAppointmentsFilter;
@@ -57,7 +57,7 @@ public class ScheduleController implements Initializable {
     }
 
     private void setupAppointmentsTable() {
-        Map<TableColumn<Appointment, Object>, Function<Appointment, Object>> appointmentDataMap = Map.ofEntries(
+        Map<TableColumn<Appointment, Object>, Function<Appointment, Object>> appointmentData = Map.ofEntries(
                 Map.entry(colAppointmentID, Appointment::appointmentID),
                 Map.entry(colAppointmentCustomerID, Appointment::customerID),
                 Map.entry(colAppointmentUserID, Appointment::userID),
@@ -66,12 +66,11 @@ public class ScheduleController implements Initializable {
                 Map.entry(colAppointmentLocation, Appointment::location),
                 Map.entry(colAppointmentContact, Appointment::contact),
                 Map.entry(colAppointmentType, Appointment::type),
-                Map.entry(colAppointmentStartDate, Appointment::startDate),
-                Map.entry(colAppointmentEndDate, Appointment::endDate),
-                Map.entry(colAppointmentStartTime, Appointment::startTime),
-                Map.entry(colAppointmentEndTime, Appointment::endTime)
+                Map.entry(colAppointmentStart, e -> e.start().format(DateTimeFormatter.ofPattern("yyyy-MM-dd  HH:mm"))),
+                Map.entry(colAppointmentEnd, e -> e.end().format(DateTimeFormatter.ofPattern("yyyy-MM-dd  HH:mm")))
         );
-        appointmentDataMap.forEach((col, func) -> col.setCellValueFactory(val -> new SimpleObjectProperty<>(func.apply(val.getValue()))));
+
+        appointmentData.forEach((col, func) -> col.setCellValueFactory(val -> new SimpleObjectProperty<>(func.apply(val.getValue()))));
         tblAppointments.setItems(appointments);
     }
 
@@ -96,12 +95,12 @@ public class ScheduleController implements Initializable {
 
         var filteredByMonth = appointments
                 .stream()
-                .filter(e -> e.startDate().getMonthValue() == LocalDate.now().getMonthValue())
+                .filter(e -> e.start().getMonthValue() == LocalDate.now().getMonthValue())
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
 
         var filteredByWeek = appointments
                 .stream()
-                .filter(e -> getCurrentWeek.apply(e.startDate()).equals(getCurrentWeek.apply(LocalDate.now())))
+                .filter(e -> getCurrentWeek.apply(e.start().toLocalDate()).equals(getCurrentWeek.apply(LocalDate.now())))
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
 
         comboAppointmentsFilter.getItems().addAll("All", "Month", "Week");
@@ -121,12 +120,12 @@ public class ScheduleController implements Initializable {
 
     @FXML
     private void addAppointment(ActionEvent actionEvent) throws IOException {
-        LoadScene.appointment(actionEvent);
+        LoadScene.appointment(actionEvent, appointments);
     }
 
     @FXML
     private void modifyAppointment(ActionEvent actionEvent) throws IOException {
-        LoadScene.appointment(actionEvent, tblAppointments.getSelectionModel().getSelectedItem());
+        LoadScene.appointment(actionEvent,appointments, tblAppointments.getSelectionModel().getSelectedItem());
     }
 
     @FXML
