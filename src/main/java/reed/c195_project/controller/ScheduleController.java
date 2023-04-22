@@ -26,12 +26,13 @@ import java.util.ResourceBundle;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class ScheduleController implements Initializable {
+public abstract class ScheduleController implements Initializable {
     ObservableList<Customer> customers = FXCollections.observableArrayList();
     ObservableList<Appointment> appointments = FXCollections.observableArrayList();
 
     @FXML
     TableView<Customer> tblCustomers;
+
     @FXML
     private TableView<Appointment> tblAppointments;
 
@@ -48,8 +49,8 @@ public class ScheduleController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.customers = JDBC.selectCustomerRecords();
-        this.appointments = JDBC.selectAppointmentRecords();
+        customers = JDBC.selectCustomerRecords();
+        appointments = JDBC.selectAppointmentRecords();
 
         setupCustomersTable();
         setupAppointmentsTable();
@@ -75,7 +76,7 @@ public class ScheduleController implements Initializable {
     }
 
     private void setupCustomersTable() {
-        Map<TableColumn<Customer, Object>, Function<Customer, Object>> customerDataMap = Map.of(
+        Map<TableColumn<Customer, Object>, Function<Customer, Object>> customerData = Map.of(
                 colCustomerID, Customer::customerID,
                 colCustomerName, Customer::name,
                 colCustomerAddress, Customer::address,
@@ -85,7 +86,7 @@ public class ScheduleController implements Initializable {
                 colCustomerPhone, Customer::phoneNumber
         );
 
-        customerDataMap.forEach((col, func) -> col.setCellValueFactory(val -> new SimpleObjectProperty<>(func.apply(val.getValue()))));
+        customerData.forEach((col, func) -> col.setCellValueFactory(val -> new SimpleObjectProperty<>(func.apply(val.getValue()))));
         tblCustomers.setItems(customers);
     }
 

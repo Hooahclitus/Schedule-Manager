@@ -156,7 +156,7 @@ public class AppointmentController implements Initializable {
         var endDateTime = convertToLocalDateTime(endDate, endHour, endMinute);
 
         if (!Validate.isAppointmentWithinBusinessHours(startDateTime, endDateTime)) {
-            this.businessHoursAlert();
+            businessHoursAlert();
             return;
         }
 
