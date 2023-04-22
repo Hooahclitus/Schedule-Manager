@@ -12,6 +12,7 @@ import reed.c195_project.utils.Validate;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -32,9 +33,9 @@ public class CustomerController implements Initializable {
         country.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 switch ((String) newValue) {
-                    case "U.S" -> setDivisionItems(1);
-                    case "UK" -> setDivisionItems(2);
-                    case "Canada" -> setDivisionItems(3);
+                    case "U.S" -> populateDivisionComboBox(1);
+                    case "UK" -> populateDivisionComboBox(2);
+                    case "Canada" -> populateDivisionComboBox(3);
                 }
             }
         });
@@ -45,57 +46,14 @@ public class CustomerController implements Initializable {
         Validate.customerInputs(fieldsAndLimits, combos, submit);
     }
 
-    private void setDivisionItems(int countryId) {
+    private void populateDivisionComboBox(int countryId) {
         String sql = "SELECT Division FROM first_level_divisions WHERE Country_ID = %d ORDER BY Division";
         String query = String.format(sql, countryId);
         division.setItems(JDBC.selectFieldData(query));
         division.setDisable(false);
     }
 
-    private void insertCustomer(ActionEvent actionEvent) throws SQLException, IOException {
-        Map<Integer, Object> customerData = Map.of(
-                1, name.getText(),
-                2, address.getText(),
-                3, postalCode.getText(),
-                4, phoneNumber.getText(),
-                5, division.getSelectionModel().getSelectedItem()
-        );
-
-        String sql = "INSERT INTO customers (Customer_Name, Address, Postal_Code, Phone, Division_ID) " +
-                "VALUES (?, ?, ?, ?, (SELECT Division_ID FROM first_level_divisions WHERE Division = ?))";
-
-        JDBC.updateTable(sql, customerData);
-        LoadScene.schedule(actionEvent);
-    }
-
-    private void updateCustomer(ActionEvent actionEvent) throws SQLException, IOException {
-        Map<Integer, Object> customerData = Map.of(
-                1, name.getText(),
-                2, address.getText(),
-                3, postalCode.getText(),
-                4, phoneNumber.getText(),
-                5, division.getSelectionModel().getSelectedItem(),
-                6, customerID.getText()
-        );
-
-        String sql = "UPDATE customers SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?, " +
-                "Division_ID = (SELECT Division_ID FROM first_level_divisions WHERE Division = ?) " +
-                "WHERE Customer_ID = ?";
-
-        JDBC.updateTable(sql, customerData);
-        LoadScene.schedule(actionEvent);
-    }
-
-    @FXML
-    private void submitCustomerData(ActionEvent actionEvent) throws SQLException, IOException {
-        if (submit.getText().equals("Update")) {
-            updateCustomer(actionEvent);
-        } else {
-            insertCustomer(actionEvent);
-        }
-    }
-
-    public void setupCustomerForm(Customer... customer) {
+    public void configureCustomerForm(Customer... customer) {
         switch (customer.length) {
             case 0 -> {
                 submit.setText("Add");
@@ -103,12 +61,12 @@ public class CustomerController implements Initializable {
             }
             case 1 -> {
                 submit.setText("Update");
-                loadCustomerData(customer[0]);
+                populateFormWithCustomerData(customer[0]);
             }
         }
     }
 
-    public void loadCustomerData(Customer customer) {
+    public void populateFormWithCustomerData(Customer customer) {
         Map<TextField, String> fields = Map.of(
                 customerID, String.valueOf(customer.customerID()),
                 name, customer.name(),
@@ -127,38 +85,33 @@ public class CustomerController implements Initializable {
     }
 
     @FXML
+    private void insertOrUpdateCustomer(ActionEvent actionEvent) throws SQLException, IOException {
+        final var INSERT_CUSTOMER_SQL = "INSERT INTO customers (Customer_Name, Address, Postal_Code, Phone, " +
+                "Division_ID) VALUES (?, ?, ?, ?, (SELECT Division_ID FROM first_level_divisions WHERE Division = ?))";
+
+        final var UPDATE_CUSTOMER_SQL = "UPDATE customers SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone " +
+                "= ?, Division_ID = (SELECT Division_ID FROM first_level_divisions WHERE Division = ?) WHERE " +
+                "Customer_ID = ?";
+
+        var sql = submit.getText().equals("Update") ? UPDATE_CUSTOMER_SQL : INSERT_CUSTOMER_SQL;
+
+        Map<Integer, Object> customerData = new HashMap<>();
+        customerData.put(1, name.getText());
+        customerData.put(2, address.getText());
+        customerData.put(3, postalCode.getText());
+        customerData.put(4, phoneNumber.getText());
+        customerData.put(5, division.getSelectionModel().getSelectedItem());
+
+        if (submit.getText().equals("Update")) {
+            customerData.put(6, customerID.getText());
+        }
+
+        JDBC.updateTable(sql, customerData);
+        LoadScene.schedule(actionEvent);
+    }
+
+    @FXML
     private void cancel(ActionEvent actionEvent) throws IOException {
         LoadScene.schedule(actionEvent);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

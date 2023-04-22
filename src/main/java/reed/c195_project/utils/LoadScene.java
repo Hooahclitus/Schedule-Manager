@@ -49,7 +49,7 @@ public abstract class LoadScene {
         Parent root = loader.load();
 
         AppointmentController appointmentController = loader.getController();
-        appointmentController.setupAppointmentForm(appointment);
+        appointmentController.configureAppointmentForm(appointment);
 
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root));
@@ -61,7 +61,7 @@ public abstract class LoadScene {
         Parent root = loader.load();
 
         CustomerController customerController = loader.getController();
-        customerController.setupCustomerForm(customer);
+        customerController.configureCustomerForm(customer);
 
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root));

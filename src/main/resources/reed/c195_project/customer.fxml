@@ -42,7 +42,7 @@
         <padding>
             <Insets top="2.0"/>
         </padding>
-        <Button fx:id="submit" disable="true" mnemonicParsing="false" onAction="#submitCustomerData" prefWidth="75.0"
+        <Button fx:id="submit" disable="true" mnemonicParsing="false" onAction="#insertOrUpdateCustomer" prefWidth="75.0"
                 text="Update"/>
         <Button mnemonicParsing="false" onAction="#cancel" prefWidth="75.0" text="Cancel"/>
     </HBox>

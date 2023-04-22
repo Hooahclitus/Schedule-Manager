@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -53,65 +54,22 @@ public class AppointmentController implements Initializable {
         Validate.appointmentInputs(fieldsAndLimits, combos, dates, submit);
     }
 
-    private LocalDateTime toLocalDateTime(DatePicker date, ComboBox<Object> hour, ComboBox<Object> minute) {
+    private LocalDateTime convertToLocalDateTime(DatePicker date, ComboBox<Object> hour, ComboBox<Object> minute) {
         return LocalDateTime.of(date.getValue(),
                 LocalTime.of((Integer) hour.getSelectionModel().getSelectedItem(),
                         (Integer) minute.getSelectionModel().getSelectedItem()));
     }
 
-    private void insertAppointment(ActionEvent actionEvent) throws SQLException, IOException {
-        var appointmentData = Map.of(
-                1, title.getText(),
-                2, description.getText(),
-                3, location.getText(),
-                4, type.getText(),
-                5, Timestamp.valueOf(toLocalDateTime(startDate, startHour, startMinute)),
-                6, Timestamp.valueOf(toLocalDateTime(endDate, endHour, endMinute)),
-                7, customerID.getSelectionModel().getSelectedItem(),
-                8, userID.getSelectionModel().getSelectedItem(),
-                9, contacts.getSelectionModel().getSelectedItem()
-        );
-
-        var sql = "INSERT INTO appointments (Title, Description, Location, Type, Start, End, Customer_ID, User_ID, " +
-                "Contact_ID) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, (SELECT Contact_ID FROM contacts WHERE Contact_Name = ?))";
-
-        JDBC.updateTable(sql, appointmentData);
-        LoadScene.schedule(actionEvent);
+    private void businessHoursAlert() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Business Hours Alert");
+        alert.setHeaderText("Appointment Time Outside of Business Hours");
+        alert.setContentText("The selected appointment time falls outside our business hours, which are from 8:00" +
+                " AM to 10:00 PM Eastern Standard Time");
+        alert.showAndWait();
     }
 
-    private void updateAppointment(ActionEvent actionEvent) throws SQLException, IOException {
-        var appointmentData = Map.of(
-                1, title.getText(),
-                2, description.getText(),
-                3, location.getText(),
-                4, type.getText(),
-                5, Timestamp.valueOf(toLocalDateTime(startDate, startHour, startMinute)),
-                6, Timestamp.valueOf(toLocalDateTime(endDate, endHour, endMinute)),
-                7, customerID.getSelectionModel().getSelectedItem(),
-                8, userID.getSelectionModel().getSelectedItem(),
-                9, contacts.getSelectionModel().getSelectedItem(),
-                10, appointmentID.getText()
-        );
-
-        var sql = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type = ?, Start = ?, End = ?, " +
-                "Customer_ID = ?, User_ID = ?, " +
-                "Contact_ID = (SELECT Contact_ID FROM contacts WHERE Contact_Name = ?) WHERE Appointment_ID = ?";
-
-        JDBC.updateTable(sql, appointmentData);
-        LoadScene.schedule(actionEvent);
-    }
-
-    @FXML
-    private void submitAppointmentData(ActionEvent actionEvent) throws SQLException, IOException {
-        if (submit.getText().equals("Update")) {
-            updateAppointment(actionEvent);
-        } else {
-            insertAppointment(actionEvent);
-        }
-    }
-
-    public void setupAppointmentForm(Appointment... appointment) {
+    public void configureAppointmentForm(Appointment... appointment) {
         switch (appointment.length) {
             case 0 -> {
                 submit.setText("Add");
@@ -119,12 +77,12 @@ public class AppointmentController implements Initializable {
             }
             case 1 -> {
                 submit.setText("Update");
-                loadAppointmentData(appointment[0]);
+                populateFormWithAppointmentData(appointment[0]);
             }
         }
     }
 
-    public void loadAppointmentData(Appointment appointment) {
+    public void populateFormWithAppointmentData(Appointment appointment) {
         var fields = Map.of(
                 appointmentID, String.valueOf(appointment.appointmentID()),
                 title, appointment.title(),
@@ -154,24 +112,46 @@ public class AppointmentController implements Initializable {
     }
 
     @FXML
+    private void insertOrUpdateAppointment(ActionEvent actionEvent) throws SQLException, IOException {
+        final var INSERT_APPOINTMENT_SQL = "INSERT INTO appointments (Title, Description, Location, Type, Start, End," +
+                " Customer_ID, User_ID, Contact_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, (SELECT Contact_ID FROM contacts " +
+                "WHERE Contact_Name = ?))";
+
+        final var UPDATE_APPOINTMENT_SQL = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type = " +
+                "?, Start = ?, End = ?, Customer_ID = ?, User_ID = ?, Contact_ID = (SELECT Contact_ID FROM contacts " +
+                "WHERE Contact_Name = ?) WHERE Appointment_ID = ?";
+
+        var sql = submit.getText().equals("Update") ? UPDATE_APPOINTMENT_SQL : INSERT_APPOINTMENT_SQL;
+
+        var startDateTime = convertToLocalDateTime(startDate, startHour, startMinute);
+        var endDateTime = convertToLocalDateTime(endDate, endHour, endMinute);
+
+        Map<Integer, Object> appointmentData = new HashMap<>();
+        appointmentData.put(1, title.getText());
+        appointmentData.put(2, description.getText());
+        appointmentData.put(3, location.getText());
+        appointmentData.put(4, type.getText());
+        appointmentData.put(5, Timestamp.valueOf(startDateTime));
+        appointmentData.put(6, Timestamp.valueOf(endDateTime));
+        appointmentData.put(7, customerID.getValue());
+        appointmentData.put(8, userID.getValue());
+        appointmentData.put(9, contacts.getValue());
+
+        if (!Validate.appointmentTimes(startDateTime, endDateTime)) {
+            businessHoursAlert();
+            return;
+        }
+
+        if (submit.getText().equals("Update")) {
+            appointmentData.put(10, appointmentID.getText());
+        }
+
+        JDBC.updateTable(sql, appointmentData);
+        LoadScene.schedule(actionEvent);
+    }
+
+    @FXML
     private void cancel(ActionEvent actionEvent) throws IOException {
         LoadScene.schedule(actionEvent);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

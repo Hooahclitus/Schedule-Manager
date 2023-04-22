@@ -6,6 +6,10 @@ import javafx.scene.control.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -18,6 +22,21 @@ public abstract class Validate {
         ps.setString(2, password.getText());
         ResultSet rs = ps.executeQuery();
         return rs.next();
+    }
+
+    private static boolean appointmentTime(LocalDateTime localDateTime) {
+        var zonedTime = ZonedDateTime.of(localDateTime, ZoneId.systemDefault())
+                .withZoneSameInstant(ZoneId.of("America/New_York"))
+                .toLocalTime();
+
+        var businessStart = LocalTime.of(8, 0);
+        var businessEnd = LocalTime.of(22, 0);
+
+        return zonedTime.isAfter(businessStart) && zonedTime.isBefore(businessEnd);
+    }
+
+    public static boolean appointmentTimes(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        return Validate.appointmentTime(startDateTime) && Validate.appointmentTime(endDateTime);
     }
 
     private static boolean areTextFieldsValid(Map<TextField, Integer> textFields) {
