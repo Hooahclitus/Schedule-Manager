@@ -38,6 +38,11 @@ public abstract class Validate {
         return Validate.appointmentTime(startDateTime) && Validate.appointmentTime(endDateTime);
     }
 
+    public static List<Appointment> isAppointmentWithin15Minutes(ObservableList<Appointment> appointments) {
+        return appointments.stream().filter(appointment -> appointment.start().isAfter(LocalDateTime.now())
+                && appointment.start().isBefore(LocalDateTime.now().plusMinutes(15))).toList();
+    }
+
     public static List<Appointment> isAppointmentOverlapping(ObservableList<Appointment> appointments, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         return appointments.stream().filter(e -> e.start().isBefore(endDateTime) && e.end().isAfter(startDateTime)).toList();
     }

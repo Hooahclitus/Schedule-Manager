@@ -14,6 +14,7 @@ import reed.c195_project.model.Appointment;
 import reed.c195_project.model.Customer;
 import reed.c195_project.utils.JDBC;
 import reed.c195_project.utils.LoadScene;
+import reed.c195_project.utils.Validate;
 
 import java.io.IOException;
 import java.net.URL;
@@ -58,6 +59,39 @@ public class ScheduleController implements Initializable {
         setupCustomersTable();
         setupAppointmentsTable();
         setupAppointmentsFilter();
+
+        upcomingAppointmentsAlert(appointments);
+    }
+
+    private void upcomingAppointmentsAlert(ObservableList<Appointment> appointments) {
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
+
+        var upcomingAppointments = Validate.isAppointmentWithin15Minutes(appointments);
+        var appointmentStrings = upcomingAppointments.stream()
+                .filter(appointment -> appointment.start().isBefore(LocalDateTime.now().plusMinutes(15)))
+                .map(appointment -> String.format("Appointment ID: %d, Date: %s, Time: %s - %s",
+                        appointment.appointmentID(),
+                        appointment.start().format(dateFormat),
+                        appointment.start().format(timeFormat),
+                        appointment.end().format(timeFormat)))
+                .toList();
+
+        String appointmentDetails = String.join("\n", appointmentStrings);
+
+        Alert alert;
+        if (!upcomingAppointments.isEmpty()) {
+            alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Upcoming Appointments");
+            alert.setHeaderText("There are appointments within 15 minutes of the current time.");
+            alert.setContentText("The following appointments are scheduled within 15 minutes:\n\n" + appointmentDetails);
+        } else {
+            alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Upcoming Appointments");
+            alert.setHeaderText("No appointments within 15 minutes of the current time.");
+            alert.setContentText("There are no upcoming appointments within 15 minutes of the current time.");
+        }
+        alert.showAndWait();
     }
 
     private void setupAppointmentsTable() {

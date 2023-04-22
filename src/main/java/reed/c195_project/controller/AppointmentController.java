@@ -90,7 +90,8 @@ public class AppointmentController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Scheduling Conflict");
         alert.setHeaderText("Unable to Schedule Appointment");
-        alert.setContentText("The appointment time conflicts with the following appointments:\n\n" + appointmentDetails + "\n\nPlease select a different time slot.");
+        alert.setContentText("The appointment time conflicts with the following:\n\n"
+                + appointmentDetails + "\n\nPlease select a different time slot.");
         alert.showAndWait();
     }
 
