@@ -38,6 +38,7 @@ public class LoginController implements Initializable {
     @FXML
     private Button login, exit;
 
+
     /**
      * Initializes the login form with resource bundle values for various form elements.
      * <p>

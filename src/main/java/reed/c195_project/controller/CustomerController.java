@@ -27,6 +27,7 @@ public class CustomerController implements Initializable {
     @FXML
     private Button submit;
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         country.setItems(JDBC.selectFieldData("SELECT Country FROM countries ORDER BY Country"));

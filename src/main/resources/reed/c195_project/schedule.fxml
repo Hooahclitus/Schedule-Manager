@@ -38,7 +38,7 @@
                         <Insets top="2.0" />
                     </padding>
                     <Button fx:id="btnAddAppointment" mnemonicParsing="false" onAction="#addAppointment" prefWidth="75.0" text="Add" />
-                    <Button fx:id="btnModifyAppointment" mnemonicParsing="false" onAction="#modifyAppointment" prefWidth="75.0" text="Modify" />
+                    <Button fx:id="modifyAppointment" disable="true" mnemonicParsing="false" onAction="#modifyAppointment" prefWidth="75.0" text="Modify" />
                     <Button fx:id="btnDeleteAppointment" mnemonicParsing="false" onAction="#deleteAppointment" prefWidth="75.0" text="Delete" />
                     <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#logout" prefWidth="75.0" text="Logout" />
                 </HBox>
@@ -76,7 +76,7 @@
                         <Insets top="2.0" />
                     </padding>
                     <Button mnemonicParsing="false" onAction="#addCustomer" prefWidth="75.0" text="Add" />
-                    <Button mnemonicParsing="false" onAction="#modifyCustomer" prefWidth="75.0" text="Modify" />
+                    <Button fx:id="modifyCustomer" disable="true" mnemonicParsing="false" onAction="#modifyCustomer" prefWidth="75.0" text="Modify" />
                     <Button mnemonicParsing="false" onAction="#deleteCustomer" prefWidth="75.0" text="Delete" />
                     <Button mnemonicParsing="false" onAction="#logout" prefWidth="75.0" text="Logout" />
                 </HBox>

@@ -42,6 +42,7 @@ public class AppointmentController implements Initializable {
     @FXML
     private Button submit;
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Stream.of(startHour, endHour).forEach(e -> e.setItems(observableList(rangeClosed(0, 23).boxed().collect(toList()))));
@@ -161,7 +162,7 @@ public class AppointmentController implements Initializable {
             return;
         }
 
-        var conflictingAppointments = Validate.isAppointmentOverlapping(appointments, startDateTime, endDateTime);
+        var conflictingAppointments = Validate.areAppointmentsOverlapping(appointments, startDateTime, endDateTime);
 
         if (!conflictingAppointments.isEmpty()) {
             conflictingAppointmentsAlert(conflictingAppointments);

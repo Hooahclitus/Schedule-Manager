@@ -6,10 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import reed.c195_project.model.Appointment;
 import reed.c195_project.model.Customer;
 import reed.c195_project.utils.JDBC;
@@ -23,7 +20,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.WeekFields;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -35,7 +31,7 @@ public class ScheduleController implements Initializable {
     ObservableList<Appointment> appointments = FXCollections.observableArrayList();
 
     @FXML
-    TableView<Customer> tblCustomers;
+    private TableView<Customer> tblCustomers;
 
     @FXML
     private TableView<Appointment> tblAppointments;
@@ -51,8 +47,18 @@ public class ScheduleController implements Initializable {
     @FXML
     private ComboBox<String> comboAppointmentsFilter;
 
+    @FXML
+    private Button modifyAppointment, modifyCustomer;
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        tblAppointments.getSelectionModel().selectedItemProperty().addListener(observable ->
+                modifyAppointment.setDisable(observable == null));
+
+        tblCustomers.getSelectionModel().selectedItemProperty().addListener(observable ->
+                modifyCustomer.setDisable(observable == null));
+
         customers = JDBC.selectCustomerRecords();
         appointments = JDBC.selectAppointmentRecords();
 
@@ -61,37 +67,6 @@ public class ScheduleController implements Initializable {
         setupAppointmentsFilter();
 
         upcomingAppointmentsAlert(appointments);
-    }
-
-    private void upcomingAppointmentsAlert(ObservableList<Appointment> appointments) {
-        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
-
-        var upcomingAppointments = Validate.isAppointmentWithin15Minutes(appointments);
-        var appointmentStrings = upcomingAppointments.stream()
-                .filter(appointment -> appointment.start().isBefore(LocalDateTime.now().plusMinutes(15)))
-                .map(appointment -> String.format("Appointment ID: %d, Date: %s, Time: %s - %s",
-                        appointment.appointmentID(),
-                        appointment.start().format(dateFormat),
-                        appointment.start().format(timeFormat),
-                        appointment.end().format(timeFormat)))
-                .toList();
-
-        String appointmentDetails = String.join("\n", appointmentStrings);
-
-        Alert alert;
-        if (!upcomingAppointments.isEmpty()) {
-            alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Upcoming Appointments");
-            alert.setHeaderText("There are appointments within 15 minutes of the current time.");
-            alert.setContentText("The following appointments are scheduled within 15 minutes:\n\n" + appointmentDetails);
-        } else {
-            alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Upcoming Appointments");
-            alert.setHeaderText("No appointments within 15 minutes of the current time.");
-            alert.setContentText("There are no upcoming appointments within 15 minutes of the current time.");
-        }
-        alert.showAndWait();
     }
 
     private void setupAppointmentsTable() {
@@ -156,6 +131,37 @@ public class ScheduleController implements Initializable {
                 );
     }
 
+    private void upcomingAppointmentsAlert(ObservableList<Appointment> appointments) {
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
+
+        var upcomingAppointments = Validate.areAppointmentsWithin15Minutes(appointments);
+        var appointmentStrings = upcomingAppointments.stream()
+                .filter(appointment -> appointment.start().isBefore(LocalDateTime.now().plusMinutes(15)))
+                .map(appointment -> String.format("Appointment ID: %d, Date: %s, Time: %s - %s",
+                        appointment.appointmentID(),
+                        appointment.start().format(dateFormat),
+                        appointment.start().format(timeFormat),
+                        appointment.end().format(timeFormat)))
+                .toList();
+
+        String appointmentDetails = String.join("\n", appointmentStrings);
+
+        Alert alert;
+        if (!upcomingAppointments.isEmpty()) {
+            alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Upcoming Appointments");
+            alert.setHeaderText("There are appointments within 15 minutes of the current time.");
+            alert.setContentText("The following appointments are scheduled within 15 minutes:\n\n" + appointmentDetails);
+        } else {
+            alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Upcoming Appointments");
+            alert.setHeaderText("No appointments within 15 minutes of the current time.");
+            alert.setContentText("There are no upcoming appointments within 15 minutes of the current time.");
+        }
+        alert.showAndWait();
+    }
+
     @FXML
     private void addAppointment(ActionEvent actionEvent) throws IOException {
         LoadScene.appointment(actionEvent, appointments);
@@ -163,7 +169,7 @@ public class ScheduleController implements Initializable {
 
     @FXML
     private void modifyAppointment(ActionEvent actionEvent) throws IOException {
-        LoadScene.appointment(actionEvent,appointments, tblAppointments.getSelectionModel().getSelectedItem());
+        LoadScene.appointment(actionEvent, appointments, tblAppointments.getSelectionModel().getSelectedItem());
     }
 
     @FXML
