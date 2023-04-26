@@ -93,7 +93,7 @@
                         <Insets bottom="5.0" />
                     </VBox.margin>
                 </Label>
-                <Button mnemonicParsing="false" onAction="#countAppointmentByMonth" prefHeight="50.0" prefWidth="210.0" text="Appointments by Contact">
+                <Button mnemonicParsing="false" onAction="#appointmentsByContact" prefHeight="50.0" prefWidth="210.0" text="Appointments by Contact">
                     <VBox.margin>
                         <Insets bottom="25.0" />
                     </VBox.margin>
@@ -107,7 +107,7 @@
                     </VBox.margin>
                 </Label>
                 <VBox alignment="CENTER" spacing="10.0">
-                    <Button mnemonicParsing="false" onAction="#countAppointmentByMonth" prefHeight="50.0" prefWidth="210.0" text="Count by Type and Month" />
+                    <Button mnemonicParsing="false" onAction="#countAppointmentByTypeThenMonth" prefHeight="50.0" prefWidth="210.0" text="Count by Type and Month" />
                     <Button mnemonicParsing="false" onAction="#countAppointmentByDate" prefHeight="50.0" prefWidth="210.0" text="Count by Date" />
                 </VBox>
             </VBox>

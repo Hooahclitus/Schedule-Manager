@@ -18,9 +18,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
 import java.util.Map;
@@ -134,29 +132,23 @@ public class ScheduleController implements Initializable {
     }
 
     @FXML
-    private void countAppointmentByMonth() {
-        String result = appointments.stream()
-                .map(appointment -> appointment.date().getMonth())
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+    private void countAppointmentByTypeThenMonth() {
+        var result = appointments.stream()
+                .collect(Collectors.groupingBy(Appointment::type,
+                        Collectors.groupingBy(appointment -> appointment.date().getMonth(), Collectors.counting())))
                 .entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
-                .map(entry -> String.format("%s: %d", entry.getKey().toString().charAt(0)
-                        + entry.getKey().toString().substring(1).toLowerCase(), entry.getValue()))
-                .collect(Collectors.joining("\n"));
-
-        txtArea.setText(result);
-    }
-
-    @FXML
-    private void countAppointmentByType() {
-        String result = appointments.stream()
-                .map(Appointment::type)
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-                .entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
-                .map(entry -> String.format("%s: %s", entry.getKey().charAt(0)
-                        + entry.getKey().substring(1).toLowerCase(), entry.getValue()))
-                .collect(Collectors.joining("\n"));
+                .map(type -> String.format("%s:\n%s",
+                        type.getKey(),
+                        type.getValue()
+                                .entrySet().stream()
+                                .sorted(Map.Entry.comparingByKey())
+                                .map(entry -> String.format("\t%s: %d",
+                                        entry.getKey().toString().charAt(0)
+                                                + entry.getKey().toString().substring(1).toLowerCase(),
+                                        entry.getValue()))
+                                .collect(Collectors.joining("\n"))))
+                .collect(Collectors.joining("\n\n"));
 
         txtArea.setText(result);
     }
@@ -182,13 +174,15 @@ public class ScheduleController implements Initializable {
                 .collect(Collectors.groupingBy(Appointment::contact))
                 .entrySet().stream()
                 .map(entry -> String.format("%s:\n%s", entry.getKey(), entry.getValue().stream()
-                        .map(appointment -> String.format("Appointment ID: %s, Title: %s, Type: %s, Description: %s, " +
-                                        "Start Date/Time: %s, End Date/Time: %s, Customer ID: %s",
+                        .map(appointment -> String.format("""
+                                        Appointment ID: %s
+                                        \tTitle: %s, Type: %s, Description: %s, Start Date/Time: %s, End Date/Time: %s, Customer ID: %s
+                                        """,
                                 appointment.appointmentID(), appointment.title(), appointment.type(),
                                 appointment.description(), appointment.start(), appointment.end(),
                                 appointment.customerID()))
                         .collect(Collectors.joining("\n"))))
-                .collect(Collectors.joining("\n\n"));
+                .collect(Collectors.joining("\n"));
 
         txtArea.setText(result);
     }
