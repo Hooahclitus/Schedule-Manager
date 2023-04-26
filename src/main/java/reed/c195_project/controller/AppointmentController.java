@@ -62,15 +62,6 @@ public class AppointmentController implements Initializable {
         Validate.appointmentInputs(fieldsAndLimits, combos, date, submit);
     }
 
-    private void businessHoursAlert() {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Business Hours Alert");
-        alert.setHeaderText("Appointment Time Outside of Business Hours");
-        alert.setContentText("The selected appointment time falls outside our business hours, which are from 8:00" +
-                " AM to 10:00 PM Eastern Standard Time");
-        alert.showAndWait();
-    }
-
     private void conflictingAppointmentsAlert(List<Appointment> appointments) {
         List<String> conflictingAppointments = appointments.stream()
                 .map(appointment -> String.format("Appointment ID: %d\n\tDate: %s - Time: %s - %s\n",
