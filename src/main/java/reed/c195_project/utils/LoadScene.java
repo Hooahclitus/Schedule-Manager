@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import reed.c195_project.AppEntry;
 import reed.c195_project.controller.AppointmentController;
 import reed.c195_project.controller.CustomerController;
+import reed.c195_project.controller.ScheduleController;
 import reed.c195_project.model.Appointment;
 import reed.c195_project.model.Customer;
 
@@ -38,10 +39,16 @@ public abstract class LoadScene {
         stage.show();
     }
 
-    public static void schedule(ActionEvent actionEvent) throws IOException {
-        Parent root = FXMLLoader.load(AppEntry.class.getResource("schedule.fxml"));
+    public static void schedule(ActionEvent actionEvent, boolean isInitialLogin) throws IOException {
+        FXMLLoader loader = new FXMLLoader(AppEntry.class.getResource("schedule.fxml"));
+        Parent root = loader.load();
+
+        if (isInitialLogin) {
+            ScheduleController scheduleController = loader.getController();
+            scheduleController.upcomingAppointmentsAlert();
+        }
+
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-        stage.setTitle("Schedule Manager");
         stage.setScene(new Scene(root));
         stage.centerOnScreen();
     }

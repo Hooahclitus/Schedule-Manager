@@ -159,11 +159,11 @@ public class AppointmentController implements Initializable {
         }
 
         JDBC.updateAppointmentsTable(submit, appointmentData);
-        LoadScene.schedule(actionEvent);
+        LoadScene.schedule(actionEvent, false);
     }
 
     @FXML
     private void cancel(ActionEvent actionEvent) throws IOException {
-        LoadScene.schedule(actionEvent);
+        LoadScene.schedule(actionEvent, false);
     }
 }

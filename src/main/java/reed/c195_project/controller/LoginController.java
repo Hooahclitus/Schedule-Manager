@@ -79,7 +79,7 @@ public class LoginController implements Initializable {
     private void login(ActionEvent actionEvent) throws SQLException, IOException {
         if (Validate.userCredentials(username, password)) {
             logger("Success");
-            LoadScene.schedule(actionEvent);
+            LoadScene.schedule(actionEvent, true);
         } else {
             logger("Fail");
             Alert alert = new Alert(Alert.AlertType.WARNING);

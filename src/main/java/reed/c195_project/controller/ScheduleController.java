@@ -68,7 +68,7 @@ public class ScheduleController implements Initializable {
         setupAppointmentsTable();
         setupAppointmentsFilter();
 
-        upcomingAppointmentsAlert(appointments);
+//        upcomingAppointmentsAlert();
     }
 
     private void setupAppointmentsTable() {
@@ -195,18 +195,15 @@ public class ScheduleController implements Initializable {
         txtArea.setText(result);
     }
 
-    private void upcomingAppointmentsAlert(ObservableList<Appointment> appointments) {
-        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
-
+    public void upcomingAppointmentsAlert() {
         var upcomingAppointments = Validate.areAppointmentsWithin15Minutes(appointments);
         var appointmentStrings = upcomingAppointments.stream()
                 .filter(appointment -> appointment.start().isBefore(LocalTime.now().plusMinutes(15)))
-                .map(appointment -> String.format("Appointment ID: %d, Date: %s, Time: %s - %s",
+                .map(appointment -> String.format("Appointment ID: %d\n\tDate: %s - Time: %s - %s\n",
                         appointment.appointmentID(),
-                        appointment.start().format(dateFormat),
-                        appointment.start().format(timeFormat),
-                        appointment.end().format(timeFormat)))
+                        appointment.start().format(DateTime.dateFormat),
+                        appointment.start().format(DateTime.timeFormat),
+                        appointment.end().format(DateTime.timeFormat)))
                 .toList();
 
         String appointmentDetails = String.join("\n", appointmentStrings);

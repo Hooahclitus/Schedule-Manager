@@ -99,11 +99,11 @@ public class CustomerController implements Initializable {
         }
 
         JDBC.updateCustomersTable(submit, customerData);
-        LoadScene.schedule(actionEvent);
+        LoadScene.schedule(actionEvent, false);
     }
 
     @FXML
     private void cancel(ActionEvent actionEvent) throws IOException {
-        LoadScene.schedule(actionEvent);
+        LoadScene.schedule(actionEvent, false);
     }
 }
