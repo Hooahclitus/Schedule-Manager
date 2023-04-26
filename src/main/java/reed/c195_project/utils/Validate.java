@@ -8,12 +8,10 @@ import reed.c195_project.model.Appointment;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public abstract class Validate {
     public static boolean userCredentials(TextField userName, TextField password) throws SQLException {
@@ -26,7 +24,7 @@ public abstract class Validate {
     }
 
     private static boolean appointmentTime(LocalDateTime localDateTime) {
-        var zonedTime = ZonedDateTime.of(localDateTime, ZoneId.systemDefault())
+        var zonedTime = localDateTime.atZone(ZoneId.systemDefault())
                 .withZoneSameInstant(ZoneId.of("America/New_York"))
                 .toLocalTime();
 
