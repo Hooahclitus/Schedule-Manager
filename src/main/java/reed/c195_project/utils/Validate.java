@@ -23,7 +23,7 @@ public abstract class Validate {
         return rs.next();
     }
 
-    private static boolean appointmentTime(LocalDateTime localDateTime) {
+    public static boolean appointmentTime(LocalDateTime localDateTime) {
         var zonedTime = localDateTime.atZone(ZoneId.systemDefault())
                 .withZoneSameInstant(ZoneId.of("America/New_York"))
                 .toLocalTime();

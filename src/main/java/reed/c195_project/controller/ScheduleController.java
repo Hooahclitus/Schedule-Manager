@@ -67,8 +67,6 @@ public class ScheduleController implements Initializable {
         setupCustomersTable();
         setupAppointmentsTable();
         setupAppointmentsFilter();
-
-//        upcomingAppointmentsAlert();
     }
 
     private void setupAppointmentsTable() {

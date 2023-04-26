@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,8 +45,12 @@ public class AppointmentController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Stream.of(startHour, endHour).forEach(e -> e.setItems(observableList(rangeClosed(0, 23).boxed().collect(toList()))));
         Stream.of(startMinute, endMinute).forEach(e -> e.setItems(observableList(rangeClosed(0, 59).boxed().collect(toList()))));
+        Stream.of(startHour, endHour).forEach(e -> e.setItems(observableList(rangeClosed(0, 23)
+                .mapToObj(i -> LocalDateTime.of(LocalDate.now(), LocalTime.of(i, 0)))
+                .filter(Validate::appointmentTime)
+                .map(LocalDateTime::getHour)
+                .collect(toList()))));
 
         contacts.setItems(JDBC.selectFieldData("SELECT Contact_Name FROM contacts ORDER BY Contact_Name"));
         customerID.setItems(JDBC.selectFieldData("SELECT Customer_ID FROM customers ORDER BY Customer_ID"));
@@ -129,10 +136,10 @@ public class AppointmentController implements Initializable {
         var startDateTime = DateTime.toLocalDateTime(date, startHour, startMinute);
         var endDateTime = DateTime.toLocalDateTime(date, endHour, endMinute);
 
-        if (!Validate.isAppointmentWithinBusinessHours(startDateTime, endDateTime)) {
-            businessHoursAlert();
-            return;
-        }
+//        if (!Validate.isAppointmentWithinBusinessHours(startDateTime, endDateTime)) {
+//            businessHoursAlert();
+//            return;
+//        }
 
         var conflictingAppointments = submit.getText().equals("Update")
                 ? Validate.areAppointmentsOverlapping(appointments, contacts, startDateTime, endDateTime, appointmentID)
