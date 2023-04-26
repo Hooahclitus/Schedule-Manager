@@ -10,10 +10,14 @@ import javafx.scene.control.TextField;
 import reed.c195_project.utils.LoadScene;
 import reed.c195_project.utils.Validate;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -74,12 +78,34 @@ public class LoginController implements Initializable {
     @FXML
     private void login(ActionEvent actionEvent) throws SQLException, IOException {
         if (Validate.userCredentials(username, password)) {
+            logger("Success");
             LoadScene.schedule(actionEvent);
         } else {
+            logger("Fail");
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setHeaderText(resourceBundle.getString("alertHeader"));
             alert.setContentText(resourceBundle.getString("alertContent"));
             alert.show();
+        }
+    }
+
+    public void logger(String status) throws IOException {
+        String log = String.format("""
+                        Username: %s
+                        Date: %s
+                        Time: %s
+                        Login Status: %s
+                        
+                        """,
+                username.getText(),
+                LocalDate.now(),
+                LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")),
+                status);
+
+        try (FileWriter writer = new FileWriter("login_activity.txt", true)) {
+            writer.write(log);
+        } catch (IOException e) {
+            throw new IOException(e);
         }
     }
 
@@ -88,3 +114,25 @@ public class LoginController implements Initializable {
         LoadScene.exit();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

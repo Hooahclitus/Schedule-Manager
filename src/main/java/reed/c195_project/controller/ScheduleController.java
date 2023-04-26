@@ -50,6 +50,9 @@ public class ScheduleController implements Initializable {
     @FXML
     private Button modifyAppointment, modifyCustomer;
 
+    @FXML
+    private TextArea txtArea;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -58,9 +61,6 @@ public class ScheduleController implements Initializable {
 
         tblCustomers.getSelectionModel().selectedItemProperty().addListener(observable ->
                 modifyCustomer.setDisable(observable == null));
-
-        customers = JDBC.selectCustomerRecords();
-        appointments = JDBC.selectAppointmentRecords();
 
         setupCustomersTable();
         setupAppointmentsTable();
@@ -84,6 +84,7 @@ public class ScheduleController implements Initializable {
         );
 
         appointmentData.forEach((col, func) -> col.setCellValueFactory(val -> new SimpleObjectProperty<>(func.apply(val.getValue()))));
+        appointments = JDBC.selectAppointmentRecords();
         tblAppointments.setItems(appointments);
     }
 
@@ -99,10 +100,11 @@ public class ScheduleController implements Initializable {
         );
 
         customerData.forEach((col, func) -> col.setCellValueFactory(val -> new SimpleObjectProperty<>(func.apply(val.getValue()))));
+        customers = JDBC.selectCustomerRecords();
         tblCustomers.setItems(customers);
     }
 
-    public void setupAppointmentsFilter() {
+    private void setupAppointmentsFilter() {
         Function<LocalDate, Integer> getCurrentWeek =
                 date -> date.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
 
@@ -129,6 +131,66 @@ public class ScheduleController implements Initializable {
                                 }
                         )
                 );
+    }
+
+    @FXML
+    private void countAppointmentByMonth() {
+        String result = appointments.stream()
+                .map(appointment -> appointment.start().getMonth())
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                .entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .map(entry -> String.format("%s: %d", entry.getKey().toString().charAt(0)
+                        + entry.getKey().toString().substring(1).toLowerCase(), entry.getValue()))
+                .collect(Collectors.joining("\n"));
+
+        txtArea.setText(result);
+    }
+
+    @FXML
+    private void countAppointmentByType() {
+        String result = appointments.stream()
+                .map(Appointment::type)
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                .entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .map(entry -> String.format("%s: %s", entry.getKey().charAt(0)
+                        + entry.getKey().substring(1).toLowerCase(), entry.getValue()))
+                .collect(Collectors.joining("\n"));
+
+        txtArea.setText(result);
+    }
+
+    @FXML
+    private void countAppointmentByDate() {
+        var results = appointments.stream()
+                .map(Appointment::start)
+                .collect(Collectors.groupingBy(LocalDateTime::toLocalDate, Collectors.counting()))
+                .entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .map(entry -> String.format("%s: %s",
+                        entry.getKey(),
+                        entry.getValue()))
+                .collect(Collectors.joining("\n"));
+
+        txtArea.setText(results);
+    }
+
+    @FXML
+    private void appointmentsByContact() {
+        var result = appointments.stream()
+                .collect(Collectors.groupingBy(Appointment::contact))
+                .entrySet().stream()
+                .map(entry -> String.format("%s:\n%s", entry.getKey(), entry.getValue().stream()
+                        .map(appointment -> String.format("Appointment ID: %s, Title: %s, Type: %s, Description: %s, " +
+                                        "Start Date/Time: %s, End Date/Time: %s, Customer ID: %s",
+                                appointment.appointmentID(), appointment.title(), appointment.type(),
+                                appointment.description(), appointment.start(), appointment.end(),
+                                appointment.customerID()))
+                        .collect(Collectors.joining("\n"))))
+                .collect(Collectors.joining("\n\n"));
+
+        txtArea.setText(result);
     }
 
     private void upcomingAppointmentsAlert(ObservableList<Appointment> appointments) {
@@ -178,7 +240,8 @@ public class ScheduleController implements Initializable {
         var recordID = tblAppointments.getSelectionModel().getSelectedItem().appointmentID();
 
         JDBC.deleteRecord(sql, recordID);
-        tblAppointments.setItems(JDBC.selectAppointmentRecords());
+        appointments = JDBC.selectAppointmentRecords();
+        tblAppointments.setItems(appointments);
     }
 
     @FXML
@@ -196,8 +259,25 @@ public class ScheduleController implements Initializable {
         var sql = "DELETE FROM customers WHERE Customer_ID = ?";
         var recordID = tblCustomers.getSelectionModel().getSelectedItem().customerID();
 
-        JDBC.deleteRecord(sql, recordID);
-        tblCustomers.setItems(JDBC.selectCustomerRecords());
+        if (appointments.stream()
+                .map(Appointment::customerID)
+                .toList()
+                .contains(String.valueOf(tblCustomers.getSelectionModel().getSelectedItem().customerID()))) {
+
+            Alert hasAppointmentsAlert = new Alert(Alert.AlertType.WARNING);
+            hasAppointmentsAlert.setTitle("Customer has appointments");
+            hasAppointmentsAlert.setHeaderText("Cannot delete customer");
+            hasAppointmentsAlert.setContentText("There are appointments scheduled for this customer. Please delete the appointments first.");
+        } else {
+            JDBC.deleteRecord(sql, recordID);
+            customers = JDBC.selectCustomerRecords();
+            tblCustomers.setItems(customers);
+
+            Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+            successAlert.setTitle("Customer deleted");
+            successAlert.setHeaderText(null);
+            successAlert.setContentText("The selected customer was successfully deleted.");
+        }
     }
 
     @FXML
