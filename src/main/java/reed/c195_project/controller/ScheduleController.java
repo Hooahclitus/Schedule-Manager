@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import reed.c195_project.model.Appointment;
 import reed.c195_project.model.Customer;
+import reed.c195_project.utils.DateTime;
 import reed.c195_project.utils.JDBC;
 import reed.c195_project.utils.LoadScene;
 import reed.c195_project.utils.Validate;
@@ -18,6 +19,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
@@ -79,8 +81,8 @@ public class ScheduleController implements Initializable {
                 Map.entry(colAppointmentLocation, Appointment::location),
                 Map.entry(colAppointmentContact, Appointment::contact),
                 Map.entry(colAppointmentType, Appointment::type),
-                Map.entry(colAppointmentStart, e -> e.start().format(DateTimeFormatter.ofPattern("yyyy-MM-dd  HH:mm"))),
-                Map.entry(colAppointmentEnd, e -> e.end().format(DateTimeFormatter.ofPattern("yyyy-MM-dd  HH:mm")))
+                Map.entry(colAppointmentStart, Appointment::startDateTimeFormatted),
+                Map.entry(colAppointmentEnd, Appointment::endDateTimeFormatted)
         );
 
         appointmentData.forEach((col, func) -> col.setCellValueFactory(val -> new SimpleObjectProperty<>(func.apply(val.getValue()))));
@@ -110,12 +112,12 @@ public class ScheduleController implements Initializable {
 
         var filteredByMonth = appointments
                 .stream()
-                .filter(e -> e.start().getMonthValue() == LocalDate.now().getMonthValue())
+                .filter(e -> e.date().getMonthValue() == LocalDate.now().getMonthValue())
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
 
         var filteredByWeek = appointments
                 .stream()
-                .filter(e -> getCurrentWeek.apply(e.start().toLocalDate()).equals(getCurrentWeek.apply(LocalDate.now())))
+                .filter(e -> getCurrentWeek.apply(e.date()).equals(getCurrentWeek.apply(LocalDate.now())))
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
 
         comboAppointmentsFilter.getItems().addAll("All", "Month", "Week");
@@ -136,7 +138,7 @@ public class ScheduleController implements Initializable {
     @FXML
     private void countAppointmentByMonth() {
         String result = appointments.stream()
-                .map(appointment -> appointment.start().getMonth())
+                .map(appointment -> appointment.date().getMonth())
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
                 .entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
@@ -164,8 +166,8 @@ public class ScheduleController implements Initializable {
     @FXML
     private void countAppointmentByDate() {
         var results = appointments.stream()
-                .map(Appointment::start)
-                .collect(Collectors.groupingBy(LocalDateTime::toLocalDate, Collectors.counting()))
+                .map(Appointment::date)
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
                 .entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
                 .map(entry -> String.format("%s: %s",
@@ -199,7 +201,7 @@ public class ScheduleController implements Initializable {
 
         var upcomingAppointments = Validate.areAppointmentsWithin15Minutes(appointments);
         var appointmentStrings = upcomingAppointments.stream()
-                .filter(appointment -> appointment.start().isBefore(LocalDateTime.now().plusMinutes(15)))
+                .filter(appointment -> appointment.start().isBefore(LocalTime.now().plusMinutes(15)))
                 .map(appointment -> String.format("Appointment ID: %d, Date: %s, Time: %s - %s",
                         appointment.appointmentID(),
                         appointment.start().format(dateFormat),
@@ -267,7 +269,8 @@ public class ScheduleController implements Initializable {
             Alert hasAppointmentsAlert = new Alert(Alert.AlertType.WARNING);
             hasAppointmentsAlert.setTitle("Customer has appointments");
             hasAppointmentsAlert.setHeaderText("Cannot delete customer");
-            hasAppointmentsAlert.setContentText("There are appointments scheduled for this customer. Please delete the appointments first.");
+            hasAppointmentsAlert.setContentText("There are appointments scheduled for this customer. Please delete " +
+                    "the appointments first.");
         } else {
             JDBC.deleteRecord(sql, recordID);
             customers = JDBC.selectCustomerRecords();

@@ -8,10 +8,12 @@ import reed.c195_project.model.Appointment;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.*;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public abstract class Validate {
     public static boolean userCredentials(TextField userName, TextField password) throws SQLException {
@@ -39,12 +41,13 @@ public abstract class Validate {
     }
 
     public static List<Appointment> areAppointmentsWithin15Minutes(ObservableList<Appointment> appointments) {
-        return appointments.stream().filter(appointment -> appointment.start().isAfter(LocalDateTime.now())
-                && appointment.start().isBefore(LocalDateTime.now().plusMinutes(15))).toList();
+        return appointments.stream().filter(appointment -> appointment.start().isAfter(LocalTime.now())
+                && appointment.start().isBefore(LocalTime.now().plusMinutes(15))).toList();
     }
 
-    public static List<Appointment> areAppointmentsOverlapping(ObservableList<Appointment> appointments, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        return appointments.stream().filter(e -> e.start().isBefore(endDateTime) && e.end().isAfter(startDateTime)).toList();
+    public static List<Appointment> areAppointmentsOverlapping(ObservableList<Appointment> appointments,
+                                                               LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        return appointments.stream().filter(e -> e.start().isBefore(endDateTime.toLocalTime()) && e.end().isAfter(startDateTime.toLocalTime())).toList();
     }
 
     private static boolean areTextFieldsValid(Map<TextField, Integer> textFields) {
@@ -64,10 +67,8 @@ public abstract class Validate {
                 .anyMatch(SelectionModel::isEmpty);
     }
 
-    private static boolean areDatePickersValid(List<DatePicker> datePickers) {
-        return datePickers.stream()
-                .map(DatePicker::getValue)
-                .anyMatch(Objects::isNull);
+    private static boolean isDatePickerValid(DatePicker datePicker) {
+        return datePicker.getValue() == null;
     }
 
     private static void changeTextFieldColorIfLimitExceeded(Map<TextField, Integer> fields) {
@@ -88,15 +89,15 @@ public abstract class Validate {
     }
 
     public static void appointmentInputs(Map<TextField, Integer> fieldsAndLimits, List<ComboBox<Object>> combos,
-                                         List<DatePicker> dates, Button btn) {
+                                         DatePicker date, Button btn) {
         InvalidationListener inputValidation = observable -> {
             changeTextFieldColorIfLimitExceeded(fieldsAndLimits);
 
-            btn.setDisable(areTextFieldsValid(fieldsAndLimits) || areComboBoxesValid(combos) || areDatePickersValid(dates));
+            btn.setDisable(areTextFieldsValid(fieldsAndLimits) || areComboBoxesValid(combos) || isDatePickerValid(date));
         };
 
         fieldsAndLimits.keySet().forEach(e -> e.textProperty().addListener(inputValidation));
         combos.forEach(e -> e.getSelectionModel().selectedItemProperty().addListener(inputValidation));
-        dates.forEach(e -> e.valueProperty().addListener(inputValidation));
+        date.valueProperty().addListener(inputValidation);
     }
 }

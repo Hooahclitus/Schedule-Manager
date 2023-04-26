@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import reed.c195_project.model.Appointment;
+import reed.c195_project.utils.DateTime;
 import reed.c195_project.utils.JDBC;
 import reed.c195_project.utils.LoadScene;
 import reed.c195_project.utils.Validate;
@@ -14,8 +15,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +30,7 @@ public class AppointmentController implements Initializable {
     private ObservableList<Appointment> appointments;
 
     @FXML
-    private DatePicker startDate, endDate;
+    private DatePicker date;
 
     @FXML
     private TextField appointmentID, title, description, location, type;
@@ -54,15 +53,8 @@ public class AppointmentController implements Initializable {
 
         var fieldsAndLimits = Map.of(title, 50, description, 50, location, 50, type, 50);
         var combos = List.of(contacts, customerID, userID, startHour, startMinute, endHour, endMinute);
-        var dates = List.of(startDate, endDate);
 
-        Validate.appointmentInputs(fieldsAndLimits, combos, dates, submit);
-    }
-
-    private LocalDateTime convertToLocalDateTime(DatePicker date, ComboBox<Object> hour, ComboBox<Object> minute) {
-        return LocalDateTime.of(date.getValue(),
-                LocalTime.of((Integer) hour.getSelectionModel().getSelectedItem(),
-                        (Integer) minute.getSelectionModel().getSelectedItem()));
+        Validate.appointmentInputs(fieldsAndLimits, combos, date, submit);
     }
 
     private void businessHoursAlert() {
@@ -132,14 +124,9 @@ public class AppointmentController implements Initializable {
                 endMinute, appointment.end().getMinute()
         );
 
-        var dates = Map.of(
-                startDate, appointment.start().toLocalDate(),
-                endDate, appointment.end().toLocalDate()
-        );
-
         fields.forEach(TextInputControl::setText);
         combos.forEach(ComboBoxBase::setValue);
-        dates.forEach(ComboBoxBase::setValue);
+        date.setValue(appointment.date());
     }
 
     @FXML
@@ -154,8 +141,8 @@ public class AppointmentController implements Initializable {
 
         var sql = submit.getText().equals("Update") ? UPDATE_APPOINTMENT_SQL : INSERT_APPOINTMENT_SQL;
 
-        var startDateTime = convertToLocalDateTime(startDate, startHour, startMinute);
-        var endDateTime = convertToLocalDateTime(endDate, endHour, endMinute);
+        var startDateTime = DateTime.toLocalDateTime(date, startHour, startMinute);
+        var endDateTime = DateTime.toLocalDateTime(date, endHour, endMinute);
 
         if (!Validate.isAppointmentWithinBusinessHours(startDateTime, endDateTime)) {
             businessHoursAlert();
