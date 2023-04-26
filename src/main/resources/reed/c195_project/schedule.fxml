@@ -1,21 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="reed.c195_project.controller.ScheduleController">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="reed.c195_project.controller.ScheduleController">
     <Tab fx:id="tbAppointments" text="Appointments">
         <AnchorPane minHeight="0.0" minWidth="0.0">
             <VBox spacing="10.0">
@@ -62,9 +52,7 @@
                 <padding>
                     <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
                 </padding>
-                <HBox spacing="10.0">
-                    <ComboBox fx:id="comboCountryFilter" prefWidth="150.0" promptText="Filter By Country" />
-                    <ComboBox fx:id="comboDivisionFilter" prefWidth="150.0" promptText="Filter By Division" />
+                <HBox alignment="CENTER_RIGHT" spacing="10.0">
                     <TextField fx:id="fldCustomersSearch" prefWidth="200.0" promptText="Search Customers">
                         <HBox.margin>
                             <Insets left="495.0" />
@@ -96,43 +84,38 @@
     </Tab>
     <Tab fx:id="tbReport" text="Reports">
         <AnchorPane>
-         <children>
             <VBox alignment="CENTER" layoutX="27.0" layoutY="106.0">
-               <children>
-                  <Label alignment="CENTER" text="Contacts">
-                     <font>
+                <Label alignment="CENTER" text="Contacts">
+                    <font>
                         <Font size="20.0" />
-                     </font>
-                     <VBox.margin>
+                    </font>
+                    <VBox.margin>
                         <Insets bottom="5.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Button mnemonicParsing="false" onAction="#countAppointmentByMonth" prefHeight="50.0" prefWidth="210.0" text="Appointments by Contact">
-                     <VBox.margin>
+                    </VBox.margin>
+                </Label>
+                <Button mnemonicParsing="false" onAction="#countAppointmentByMonth" prefHeight="50.0" prefWidth="210.0" text="Appointments by Contact">
+                    <VBox.margin>
                         <Insets bottom="25.0" />
-                     </VBox.margin>
-                  </Button>
-                  <Label alignment="CENTER" text="Appointments">
-                     <font>
+                    </VBox.margin>
+                </Button>
+                <Label alignment="CENTER" text="Appointments">
+                    <font>
                         <Font size="20.0" />
-                     </font>
-                     <VBox.margin>
+                    </font>
+                    <VBox.margin>
                         <Insets bottom="5.0" />
-                     </VBox.margin>
-                  </Label>
-                  <VBox alignment="CENTER" spacing="10.0">
-                     <children>
-                        <Button mnemonicParsing="false" onAction="#countAppointmentByMonth" prefHeight="50.0" prefWidth="210.0" text="Count by Type and Month" />
-                        <Button mnemonicParsing="false" onAction="#countAppointmentByDate" prefHeight="50.0" prefWidth="210.0" text="Count by Date" />
-                     </children>
-                  </VBox>
-               </children>
+                    </VBox.margin>
+                </Label>
+                <VBox alignment="CENTER" spacing="10.0">
+                    <Button mnemonicParsing="false" onAction="#countAppointmentByMonth" prefHeight="50.0" prefWidth="210.0" text="Count by Type and Month" />
+                    <Button mnemonicParsing="false" onAction="#countAppointmentByDate" prefHeight="50.0" prefWidth="210.0" text="Count by Date" />
+                </VBox>
             </VBox>
             <TextArea fx:id="txtArea" layoutX="259.0" layoutY="13.0" prefHeight="476.0" prefWidth="770.0">
-               <font>
-                  <Font size="14.0" />
-               </font>
+                <font>
+                    <Font size="14.0" />
+                </font>
             </TextArea>
-         </children></AnchorPane>
+        </AnchorPane>
     </Tab>
 </TabPane>
