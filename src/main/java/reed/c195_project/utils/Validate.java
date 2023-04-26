@@ -34,10 +34,6 @@ public abstract class Validate {
         return zonedTime.isAfter(businessStart.minusMinutes(1)) && zonedTime.isBefore(businessEnd.plusMinutes(1));
     }
 
-    public static boolean isAppointmentWithinBusinessHours(LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        return Validate.appointmentTime(startDateTime) && Validate.appointmentTime(endDateTime);
-    }
-
     public static List<Appointment> areAppointmentsWithin15Minutes(ObservableList<Appointment> appointments) {
         return appointments.stream().filter(appointment -> appointment.start().isAfter(LocalTime.now())
                 && appointment.start().isBefore(LocalTime.now().plusMinutes(15))).toList();

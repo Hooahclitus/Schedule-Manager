@@ -136,11 +136,6 @@ public class AppointmentController implements Initializable {
         var startDateTime = DateTime.toLocalDateTime(date, startHour, startMinute);
         var endDateTime = DateTime.toLocalDateTime(date, endHour, endMinute);
 
-//        if (!Validate.isAppointmentWithinBusinessHours(startDateTime, endDateTime)) {
-//            businessHoursAlert();
-//            return;
-//        }
-
         var conflictingAppointments = submit.getText().equals("Update")
                 ? Validate.areAppointmentsOverlapping(appointments, contacts, startDateTime, endDateTime, appointmentID)
                 : Validate.areAppointmentsOverlapping(appointments, contacts, startDateTime, endDateTime);
