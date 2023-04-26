@@ -27,11 +27,11 @@ public record Appointment(int appointmentID,
     }
 
     public String startDateTimeFormatted() {
-        return startDateTime().format(DateTime.formatter);
+        return startDateTime().format(DateTime.dateTimeFormat);
     }
 
     public String endDateTimeFormatted() {
-        return endDateTime().format(DateTime.formatter);
+        return endDateTime().format(DateTime.dateTimeFormat);
     }
 }
 

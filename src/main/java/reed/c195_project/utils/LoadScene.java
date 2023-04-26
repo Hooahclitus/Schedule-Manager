@@ -52,7 +52,7 @@ public abstract class LoadScene {
 
         AppointmentController appointmentController = loader.getController();
         appointmentController.configureAppointmentForm(appointment);
-        appointmentController.passAppointments(appointments);
+        appointmentController.passAppointments(appointments.stream().toList());
 
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root));

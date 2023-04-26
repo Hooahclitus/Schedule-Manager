@@ -30,7 +30,7 @@ public class CustomerController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        country.setItems(JDBC.selectFieldData("SELECT Country FROM countries ORDER BY Country"));
+        country.setItems(JDBC.selectFieldData("SELECT Country FROM countries"));
         country.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 switch ((String) newValue) {
@@ -87,27 +87,18 @@ public class CustomerController implements Initializable {
 
     @FXML
     private void insertOrUpdateCustomer(ActionEvent actionEvent) throws SQLException, IOException {
-        final var INSERT_CUSTOMER_SQL = "INSERT INTO customers (Customer_Name, Address, Postal_Code, Phone, " +
-                "Division_ID) VALUES (?, ?, ?, ?, (SELECT Division_ID FROM first_level_divisions WHERE Division = ?))";
-
-        final var UPDATE_CUSTOMER_SQL = "UPDATE customers SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone " +
-                "= ?, Division_ID = (SELECT Division_ID FROM first_level_divisions WHERE Division = ?) WHERE " +
-                "Customer_ID = ?";
-
-        var sql = submit.getText().equals("Update") ? UPDATE_CUSTOMER_SQL : INSERT_CUSTOMER_SQL;
-
         Map<Integer, Object> customerData = new HashMap<>();
         customerData.put(1, name.getText());
         customerData.put(2, address.getText());
         customerData.put(3, postalCode.getText());
         customerData.put(4, phoneNumber.getText());
-        customerData.put(5, division.getSelectionModel().getSelectedItem());
+        customerData.put(5, division.getValue());
 
         if (submit.getText().equals("Update")) {
             customerData.put(6, customerID.getText());
         }
 
-        JDBC.updateTable(sql, customerData);
+        JDBC.updateCustomersTable(submit, customerData);
         LoadScene.schedule(actionEvent);
     }
 

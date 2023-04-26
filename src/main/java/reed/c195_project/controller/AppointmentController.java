@@ -1,6 +1,5 @@
 package reed.c195_project.controller;
 
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,7 +14,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +25,7 @@ import static java.util.stream.IntStream.rangeClosed;
 import static javafx.collections.FXCollections.observableList;
 
 public class AppointmentController implements Initializable {
-    private ObservableList<Appointment> appointments;
+    private List<Appointment> appointments;
 
     @FXML
     private DatePicker date;
@@ -67,15 +65,12 @@ public class AppointmentController implements Initializable {
     }
 
     private void conflictingAppointmentsAlert(List<Appointment> appointments) {
-        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
-
         List<String> conflictingAppointments = appointments.stream()
-                .map(appointment -> String.format("Appointment ID: %d, Date: %s, Time: %s - %s",
+                .map(appointment -> String.format("Appointment ID: %d\n\tDate: %s - Time: %s - %s\n",
                         appointment.appointmentID(),
-                        appointment.start().format(dateFormat),
-                        appointment.start().format(timeFormat),
-                        appointment.end().format(timeFormat)))
+                        appointment.date().format(DateTime.dateFormat),
+                        appointment.start().format(DateTime.timeFormat),
+                        appointment.end().format(DateTime.timeFormat)))
                 .toList();
 
         String appointmentDetails = String.join("\n", conflictingAppointments);
@@ -88,7 +83,7 @@ public class AppointmentController implements Initializable {
         alert.showAndWait();
     }
 
-    public void passAppointments(ObservableList<Appointment> appointments) {
+    public void passAppointments(List<Appointment> appointments) {
         this.appointments = appointments;
     }
 
@@ -131,16 +126,6 @@ public class AppointmentController implements Initializable {
 
     @FXML
     private void insertOrUpdateAppointment(ActionEvent actionEvent) throws SQLException, IOException {
-        final var INSERT_APPOINTMENT_SQL = "INSERT INTO appointments (Title, Description, Location, Type, Start, End," +
-                " Customer_ID, User_ID, Contact_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, (SELECT Contact_ID FROM contacts " +
-                "WHERE Contact_Name = ?))";
-
-        final var UPDATE_APPOINTMENT_SQL = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type = " +
-                "?, Start = ?, End = ?, Customer_ID = ?, User_ID = ?, Contact_ID = (SELECT Contact_ID FROM contacts " +
-                "WHERE Contact_Name = ?) WHERE Appointment_ID = ?";
-
-        var sql = submit.getText().equals("Update") ? UPDATE_APPOINTMENT_SQL : INSERT_APPOINTMENT_SQL;
-
         var startDateTime = DateTime.toLocalDateTime(date, startHour, startMinute);
         var endDateTime = DateTime.toLocalDateTime(date, endHour, endMinute);
 
@@ -149,7 +134,9 @@ public class AppointmentController implements Initializable {
             return;
         }
 
-        var conflictingAppointments = Validate.areAppointmentsOverlapping(appointments, startDateTime, endDateTime);
+        var conflictingAppointments = submit.getText().equals("Update")
+                ? Validate.areAppointmentsOverlapping(appointments, contacts, startDateTime, endDateTime, appointmentID)
+                : Validate.areAppointmentsOverlapping(appointments, contacts, startDateTime, endDateTime);
 
         if (!conflictingAppointments.isEmpty()) {
             conflictingAppointmentsAlert(conflictingAppointments);
@@ -171,7 +158,7 @@ public class AppointmentController implements Initializable {
             appointmentData.put(10, appointmentID.getText());
         }
 
-        JDBC.updateTable(sql, appointmentData);
+        JDBC.updateAppointmentsTable(submit, appointmentData);
         LoadScene.schedule(actionEvent);
     }
 

@@ -2,6 +2,7 @@ package reed.c195_project.utils;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Button;
 import reed.c195_project.model.Appointment;
 import reed.c195_project.model.Customer;
 
@@ -107,7 +108,7 @@ public abstract class JDBC {
         return fieldData;
     }
 
-    public static void updateTable(String sql, Map<Integer, ?> formData) throws SQLException {
+    private static void updateTable(String sql, Map<Integer, ?> formData) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
         formData.forEach((index, val) -> {
@@ -126,4 +127,50 @@ public abstract class JDBC {
         preparedStatement.setInt(1, recordID);
         preparedStatement.executeUpdate();
     }
+
+    public static void updateAppointmentsTable(Button submit, Map<Integer, ?> formData) throws SQLException {
+        final var INSERT_APPOINTMENT_SQL = "INSERT INTO appointments (Title, Description, Location, Type, Start, End," +
+                " Customer_ID, User_ID, Contact_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, (SELECT Contact_ID FROM contacts " +
+                "WHERE Contact_Name = ?))";
+
+        final var UPDATE_APPOINTMENT_SQL = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type = " +
+                "?, Start = ?, End = ?, Customer_ID = ?, User_ID = ?, Contact_ID = (SELECT Contact_ID FROM contacts " +
+                "WHERE Contact_Name = ?) WHERE Appointment_ID = ?";
+
+        var sql = submit.getText().equals("Update") ? UPDATE_APPOINTMENT_SQL : INSERT_APPOINTMENT_SQL;
+
+        updateTable(sql, formData);
+    }
+
+    public static void updateCustomersTable(Button submit, Map<Integer, ?> formData) throws SQLException {
+        final var INSERT_CUSTOMER_SQL = "INSERT INTO customers (Customer_Name, Address, Postal_Code, Phone, " +
+                "Division_ID) VALUES (?, ?, ?, ?, (SELECT Division_ID FROM first_level_divisions WHERE Division = ?))";
+
+        final var UPDATE_CUSTOMER_SQL = "UPDATE customers SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone " +
+                "= ?, Division_ID = (SELECT Division_ID FROM first_level_divisions WHERE Division = ?) WHERE " +
+                "Customer_ID = ?";
+
+        var sql = submit.getText().equals("Update") ? UPDATE_CUSTOMER_SQL : INSERT_CUSTOMER_SQL;
+
+        updateTable(sql, formData);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

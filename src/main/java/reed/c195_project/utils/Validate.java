@@ -33,7 +33,7 @@ public abstract class Validate {
         var businessStart = LocalTime.of(8, 0);
         var businessEnd = LocalTime.of(22, 0);
 
-        return zonedTime.isAfter(businessStart) && zonedTime.isBefore(businessEnd);
+        return zonedTime.isAfter(businessStart.minusMinutes(1)) && zonedTime.isBefore(businessEnd.plusMinutes(1));
     }
 
     public static boolean isAppointmentWithinBusinessHours(LocalDateTime startDateTime, LocalDateTime endDateTime) {
@@ -45,9 +45,17 @@ public abstract class Validate {
                 && appointment.start().isBefore(LocalTime.now().plusMinutes(15))).toList();
     }
 
-    public static List<Appointment> areAppointmentsOverlapping(ObservableList<Appointment> appointments,
-                                                               LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        return appointments.stream().filter(e -> e.start().isBefore(endDateTime.toLocalTime()) && e.end().isAfter(startDateTime.toLocalTime())).toList();
+    public static List<Appointment> areAppointmentsOverlapping(List<Appointment> appointments,
+                                                               ComboBox<Object> contacts,
+                                                               LocalDateTime start, LocalDateTime end,
+                                                               TextField... appointmentID) {
+        var appointmentStream = appointments.stream()
+                .filter(e -> e.contact().equals(contacts.getValue()))
+                .filter(e -> e.start().isBefore(end.toLocalTime()) && e.end().isAfter(start.toLocalTime()));
+
+        return appointmentID.length == 0
+                ? appointmentStream.toList()
+                : appointmentStream.filter(e -> e.appointmentID() != Integer.parseInt(appointmentID[0].getText())).toList();
     }
 
     private static boolean areTextFieldsValid(Map<TextField, Integer> textFields) {
