@@ -115,14 +115,14 @@ public class AppointmentController implements Initializable {
     }
 
     /**
-     * Configures the appointment form based on the number of appointments provided.
-     * If no appointments are given, the submit button is changed to "Add" and the text of the appointmentID text
-     * field is set to "Auto-Generated".
-     * If one appointment is given, the submit button text is set to "Update", and the appointmentID text field is
-     * populated with the appointment id for the selected appointment.
+     * Configures the appointment form based on the number of appointments passed as arguments.
+     * If no appointments are passed, the form is set up for adding a new appointment, with an auto-generated appointment ID.
+     * If one appointment is passed, the form is set up for updating an existing appointment, and the form is populated with the appointment's data.
      *
-     * @param appointment a variable number of Appointment objects
+     * @param appointment A variable number of Appointment objects representing the appointment(s) to be configured on the form.
+     *                     The length of the array determines the configuration of the form.
      */
+
     public void configureAppointmentForm(Appointment... appointment) {
         switch (appointment.length) {
             case 0 -> {
