@@ -253,6 +253,13 @@ public abstract class JDBC {
 
     /**
      * This method updates a specified table with the given form data.
+     * <p>
+     * <b>LAMBDA JUSTIFICATION</b>: The use of a lambda expression in this method allows for concise and
+     * readable code to iterate through the map of form data and set each parameter in the prepared statement.
+     * By using the forEach method on the formData map, the code can avoid the use of an explicit for loop and
+     * boilerplate code for accessing the keys and values of the map. The lambda expression also allows for the
+     * handling of any SQLExceptions that may occur during the iteration of the map, which can be caught and
+     * rethrown as RuntimeExceptions for easier error handling.
      *
      * @param sql      the SQL statement used to update the table.
      * @param formData a map of the form data to be used in the update statement.
