@@ -59,11 +59,16 @@ public class ScheduleController implements Initializable {
 
 
     /**
-     * Initializes the controller class and sets up listeners for the modify and delete buttons in the appointments and customers tabs.
-     * The listeners disable the buttons when there is no selection in the corresponding tableviews.
-     * Additionally, this method sets up the tableviews for the customers and appointments tabs and configures the filter for the appointments table.
+     * Initializes the controller class and sets up listeners for the modify and delete buttons in the appointments
+     * and customers tabs.The listeners disable the buttons when there is no selection in the corresponding tableviews.
+     * Additionally, this method sets up the tableviews for the customers and appointments tabs and configures the
+     * filter for the appointments table.
+     * <p>
+     * <b>LAMBDA JUSTIFICATION</b>: The use of lambda expressions in the listeners for the selection of the
+     * tableviews provides a concise and readable way to set the disabled state of the modify and delete buttons
+     * based on the presence or absence of a selection.
      *
-     * @param url the URL of the FXML document.
+     * @param url            the URL of the FXML document.
      * @param resourceBundle the ResourceBundle used to localize the FXML document.
      */
     @Override
@@ -85,6 +90,10 @@ public class ScheduleController implements Initializable {
 
     /**
      * Sets up the appointments table.
+     * <p>
+     * <b>LAMBDA JUSTIFICATION</b>: A lambda expression is used in the forEach method call to set the cell value factory
+     * for each appointment table column. This lambda expression allows us to easily map each column to the appropriate
+     * appointment data field without having to write a separate function for each mapping.
      */
     private void setupAppointmentsTable() {
         Map<TableColumn<Appointment, Object>, Function<Appointment, Object>> appointmentData = Map.ofEntries(
@@ -107,6 +116,10 @@ public class ScheduleController implements Initializable {
 
     /**
      * Sets up the customers table.
+     * <p>
+     * <b>LAMBDA JUSTIFICATION</b>: A lambda expression is used in the forEach method call to set the cell value factory
+     * for each customer table column. This lambda expression allows us to easily map each column to the appropriate
+     * customer data field without having to write a separate function for each mapping.
      */
     private void setupCustomersTable() {
         Map<TableColumn<Customer, Object>, Function<Customer, Object>> customerData = Map.of(
@@ -126,6 +139,11 @@ public class ScheduleController implements Initializable {
 
     /**
      * Sets up the appointments filter.
+     * <p>
+     * <b>LAMBDA JUSTIFICATION</b>: This method uses lambda expressions to simplify filtering of appointments by
+     * month and week. A lambda expression is used to calculate the current week number, which is then used to filter
+     * appointments by week. Another lambda expression is used as the listener for the selection of the appointments
+     * filter combo box, which updates the appointments table based on the selected filter value.
      */
     private void setupAppointmentsFilter() {
         Function<LocalDate, Integer> getCurrentWeek =
@@ -171,9 +189,14 @@ public class ScheduleController implements Initializable {
     }
 
     /**
-     * Displays an Alert dialog that shows upcoming appointments within the next 15 minutes.
-     * The Alert dialog will display the Appointment ID, Date, Start Time, and End Time for each upcoming appointment.
-     * If there are no upcoming appointments within 15 minutes, the Alert dialog will display a message indicating so.
+     * Displays an alert message if there are any upcoming appointments within 15 minutes of the current time.
+     * If there are upcoming appointments, it displays the appointment details in the alert message.
+     * If there are no upcoming appointments, it displays a message indicating so.
+     * <p>
+     * <b>LAMBDA JUSTIFICATION</b>: Uses a lambda expression in the stream to filter and map the upcomingAppointments
+     * list
+     * into a list of appointment details strings. This simplifies the code by avoiding the need for a separate
+     * loop to process the list.
      */
     public void upcomingAppointmentsAlert() {
         var upcomingAppointments = Validate.areAppointmentsWithin15Minutes(appointments);
@@ -204,8 +227,13 @@ public class ScheduleController implements Initializable {
     }
 
     /**
-     * This method counts the number of appointments by type and month, then sorts the results and formats them as a string.
-     * The string is then set as the text of a text area.
+     * This method counts the number of appointments by type and month, then sorts the results and formats them as a
+     * string. The string is then set as the text of a text area.
+     * <p>
+     * <b>LAMBDA JUSTIFICATION</b>: Lambda expressions are used in the Collectors.groupingBy and map methods to
+     * specify the grouping and mapping
+     * functions, respectively. They provide a concise and readable way to express the logic for grouping and mapping
+     * appointments by their type and month.
      */
     @FXML
     private void countAppointmentByTypeThenMonth() {
@@ -232,6 +260,10 @@ public class ScheduleController implements Initializable {
     /**
      * This method counts the number of appointments by date, then sorts the results and formats them as a string.
      * The string is then set as the text of a text area.
+     * <p>
+     * <b>LAMBDA JUSTIFICATION</b>: The lambda expression is used to simplify the process of formatting the results
+     * as a string. It is used to replace a traditional for-each loop to iterate over the map entries and concatenate
+     * the results as a string.
      */
     @FXML
     private void countAppointmentByDate() {
@@ -251,6 +283,10 @@ public class ScheduleController implements Initializable {
     /**
      * This method groups appointments by contact, then formats the results as a string.
      * The string is then set as the text of a text area.
+     * <p>
+     * <b>LAMBDA JUSTIFICATION</b>: The lambda expression is used to format the output for each appointment in the
+     * resulting list. This allows for a more concise and readable code, as well as easier maintenance and
+     * modification of the formatting in the future.
      */
     @FXML
     private void appointmentsByContact() {
@@ -279,6 +315,7 @@ public class ScheduleController implements Initializable {
      * Launches the 'Add Appointment' screen.
      *
      * @param actionEvent the ActionEvent that triggered this method call
+     *
      * @throws IOException if an I/O error occurs while loading the scene
      */
     @FXML
@@ -290,6 +327,7 @@ public class ScheduleController implements Initializable {
      * Launches the 'Modify Appointment' screen, pre-populated with the selected appointment's data.
      *
      * @param actionEvent the ActionEvent that triggered this method call
+     *
      * @throws IOException if an I/O error occurs while loading the scene
      */
     @FXML
@@ -344,6 +382,7 @@ public class ScheduleController implements Initializable {
      * Loads the customer scene for adding a new customer.
      *
      * @param actionEvent the action event triggering the method
+     *
      * @throws IOException if an I/O error occurs while loading the scene
      */
     @FXML
@@ -356,6 +395,7 @@ public class ScheduleController implements Initializable {
      * Loads the customer scene for modifying an existing customer.
      *
      * @param actionEvent the action event triggering the method
+     *
      * @throws IOException if an I/O error occurs while loading the scene
      */
     @FXML
@@ -364,9 +404,15 @@ public class ScheduleController implements Initializable {
     }
 
     /**
-     * Deletes the selected customer and all associated appointments.
+     * Deletes the selected customer and all associated appointments, after displaying a confirmation alert to the user.
+     * <p>
+     * <b>LAMBDA JUSTIFICATION</b>: In this method, a lambda expression is used to iterate through the appointments
+     * list and
+     * filter the appointments associated with the selected customer. This filtering is done to delete all associated
+     * appointments of the customer being deleted. The lambda expression is passed as an argument to the forEach()
+     * method, which helps in concise and readable code.
      *
-     * @throws SQLException if an error occurs while accessing the database
+     * @throws SQLException if there is an error in the SQL query or database connection.
      */
     @FXML
     private void deleteCustomer() throws SQLException {
@@ -415,6 +461,7 @@ public class ScheduleController implements Initializable {
      * Logs out the current user and returns to the login screen.
      *
      * @param actionEvent the action event triggering the method
+     *
      * @throws IOException if an I/O error occurs while loading the login screen
      */
     @FXML

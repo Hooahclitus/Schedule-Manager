@@ -29,12 +29,15 @@ public class CustomerController implements Initializable {
 
 
     /**
-     * Initializes the customer form with values and sets up listeners on the country combo box.
-     * The lambda expression in the listener checks for a new selection in the country combo box,
-     * and if not null, populates the division combo box with the appropriate divisions for the selected country.
-     * It also validates the customer inputs to ensure they are not empty.
+     * Initializes the customer form with default values and sets up listeners on the country combo box.
+     * <p>
+     * <b>LAMBDA JUSTIFICATION</b>: The listener uses a lambda expression to check for a new selection in the country combo box.
+     * If a new selection is made, the division combo box is populated with the appropriate divisions for the selected country.
+     * This reduces the amount of boilerplate code needed for handling the combo box selection events.
+     * <p>
+     * The method also validates the customer inputs to ensure they are not empty and within the specified limits.
      *
-     * @param url            the URL of the FXML document
+     * @param url the URL of the FXML document
      * @param resourceBundle the ResourceBundle used to localize the FXML document
      */
     @Override

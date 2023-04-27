@@ -37,11 +37,10 @@ public class LoginController implements Initializable {
     /**
      * Initializes the login form with resource bundle values for various form elements.
      * <p>
-     * The lambda expression used in the initialize method is used to iterate through
-     * the Map of form elements and corresponding keys in the resource bundle, and
-     * set the text of each form element to the localized string value in the
-     * resource bundle. This makes the code concise, readable and avoids the need
-     * to use a for loop to iterate through the Map.
+     * <b>LAMBDA JUSTIFICATION</b>: The lambda expression used in the initialize method is used to iterate through
+     * the Map of form elements and corresponding keys in the resource bundle, and set the text of each form element
+     * to the localized string value in the resource bundle. This makes the code concise, readable and avoids the
+     * need to use a for loop to iterate through the Map.
      *
      * @param url            the URL location of the FXML file
      * @param resourceBundle the resource bundle containing localized string values
@@ -84,6 +83,7 @@ public class LoginController implements Initializable {
      * Logs the user's login activity to a file.
      *
      * @param status The status of the login activity.
+     *
      * @throws IOException if there is an error writing to the log file.
      */
     public void logger(String status) throws IOException {

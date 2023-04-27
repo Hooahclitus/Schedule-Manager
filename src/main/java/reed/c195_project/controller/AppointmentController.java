@@ -49,14 +49,14 @@ public class AppointmentController implements Initializable {
      * ComboBoxes, sets the options for the contacts, customerID, and userID ComboBoxes,
      * and validates the appointment input fields before allowing the user to submit.
      * <p>
-     * The use of lambda expressions in this method allows for concise and readable code.
+     * <b>LAMBDA JUSTIFICATION</b>: The use of lambda expressions in this method allows for concise and readable code.
      * By using a lambda expression in forEach() method, we are able to apply the same
      * operation (setting the items of the ComboBox) to both startMinute and endMinute,
      * and both startHour and endHour in just one line of code. Similarly, the use of
      * lambda expressions and method references in the map() method allows us to map each
      * hour to a LocalDateTime object, filter out appointment times that are not valid,
      * and map the remaining LocalDateTime objects to just their hour values in a single
-     * stream operation. This makes the code more concise and easier to read.
+     * stream operation.
      *
      * @param url            the URL of the FXML document
      * @param resourceBundle the ResourceBundle used to localize the FXML document
@@ -82,8 +82,13 @@ public class AppointmentController implements Initializable {
 
     /**
      * Displays an alert to inform the user that the requested appointment time conflicts with other appointments.
+     * <p>
+     * <b>LAMBDA JUSTIFICATION</b>: This method uses a lambda expression to format the conflicting appointments as a string for display in the alert
+     * dialog. This improves code readability and reduces the amount of boilerplate code required as compared to using a traditional
+     * loop or iterator. Additionally, the use of the Stream API with Collectors.joining() allows for concise and efficient
+     * concatenation of the appointment details into a single string.
      *
-     * @param appointments A list of Appointment objects representing the conflicting appointments.
+     * @param appointments a list of appointments to check for conflicts
      */
     private void conflictingAppointmentsAlert(List<Appointment> appointments) {
         var conflictingAppointments = appointments.stream()
