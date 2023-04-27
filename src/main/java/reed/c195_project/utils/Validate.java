@@ -99,8 +99,7 @@ public abstract class Validate {
 
         return appointmentID.length == 0
                 ? appointmentStream.toList()
-                :
-                appointmentStream.filter(e -> e.appointmentID() != Integer.parseInt(appointmentID[0].getText())).toList();
+                : appointmentStream.filter(e -> e.appointmentID() != Integer.parseInt(appointmentID[0].getText())).toList();
     }
 
     /**
@@ -148,6 +147,30 @@ public abstract class Validate {
      */
     private static boolean isDatePickerValid(DatePicker datePicker) {
         return datePicker.getValue() == null;
+    }
+
+
+    /**
+     * Checks if the given date and time is before the current date and time.
+     *
+     * @param dateTime the date and time to be checked
+     *
+     * @return true if the given date and time is before the current date and time, otherwise false
+     */
+    public static boolean isAppointmentDateTimeBeforeCurrentDateTime(LocalDateTime dateTime) {
+        return dateTime.isBefore(LocalDateTime.now(ZoneId.systemDefault()));
+    }
+
+    /**
+     * Checks if the end time is before the start time.
+     *
+     * @param startDateTime the start date and time
+     * @param endDateTime   the end date and time
+     *
+     * @return true if the end date and time is before the start date and time, otherwise false
+     */
+    public static boolean isEndTimeBeforeStartTime(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        return (endDateTime.toLocalTime().isBefore(startDateTime.toLocalTime()));
     }
 
     /**

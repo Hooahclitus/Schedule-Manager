@@ -111,6 +111,28 @@ public class AppointmentController implements Initializable {
     }
 
     /**
+     * Shows an alert informing the user that the end time of an appointment is before or on the start time.
+     */
+    private void conflictingAppointmentTimeAlert() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Invalid Time Selection");
+        alert.setHeaderText("End Time is Before or on Start Time");
+        alert.setContentText("Please select an End Time that is after the Start Time.");
+        alert.show();
+    }
+
+    /**
+     * Shows an alert informing the user that the start date of an appointment is before the current date.
+     */
+    private void conflictingStartDateTimeAlert() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Invalid Date Selection");
+        alert.setHeaderText("Start Date is Before Current Date");
+        alert.setContentText("Please select a later Start Date.");
+        alert.show();
+    }
+
+    /**
      * Sets the appointments list for verification of appointment data within the appointment GUI.
      *
      * @param appointments The list of appointments to be set for this object.
@@ -193,6 +215,16 @@ public class AppointmentController implements Initializable {
 
         if (!conflictingAppointments.isEmpty()) {
             conflictingAppointmentsAlert(conflictingAppointments);
+            return;
+        }
+
+        if (Validate.isEndTimeBeforeStartTime(startDateTime, endDateTime)) {
+            conflictingAppointmentTimeAlert();
+            return;
+        }
+
+        if (Validate.isAppointmentDateTimeBeforeCurrentDateTime(startDateTime)) {
+            conflictingStartDateTimeAlert();
             return;
         }
 
