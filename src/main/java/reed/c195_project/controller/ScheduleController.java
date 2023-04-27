@@ -22,6 +22,7 @@ import java.time.LocalTime;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -48,7 +49,7 @@ public class ScheduleController implements Initializable {
     private ComboBox<String> comboAppointmentsFilter;
 
     @FXML
-    private Button modifyAppointment, modifyCustomer;
+    private Button modifyAppointment, modifyCustomer, deleteAppointment, deleteCustomer;
 
     @FXML
     private TextArea txtArea;
@@ -56,11 +57,15 @@ public class ScheduleController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        tblAppointments.getSelectionModel().selectedItemProperty().addListener(observable ->
-                modifyAppointment.setDisable(observable == null));
+        tblAppointments.getSelectionModel().selectedItemProperty().addListener(observable -> {
+            modifyAppointment.setDisable(observable == null);
+            deleteAppointment.setDisable(observable == null);
+                });
 
-        tblCustomers.getSelectionModel().selectedItemProperty().addListener(observable ->
-                modifyCustomer.setDisable(observable == null));
+        tblCustomers.getSelectionModel().selectedItemProperty().addListener(observable -> {
+            modifyCustomer.setDisable(observable == null);
+            deleteCustomer.setDisable(observable == null);
+                });
 
         setupCustomersTable();
         setupAppointmentsTable();
@@ -227,12 +232,32 @@ public class ScheduleController implements Initializable {
 
     @FXML
     private void deleteAppointment() throws SQLException {
-        var sql = "DELETE FROM appointments WHERE Appointment_ID = ?";
-        var recordID = tblAppointments.getSelectionModel().getSelectedItem().appointmentID();
+        var appointment = tblAppointments.getSelectionModel().getSelectedItem();
+        var appointmentID = appointment.appointmentID();
+        var appointmentType = appointment.type();
 
-        JDBC.deleteRecord(sql, recordID);
-        appointments = JDBC.selectAppointmentRecords();
-        tblAppointments.setItems(appointments);
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirm Cancellation");
+        confirmationAlert.setHeaderText("Are you sure?");
+        confirmationAlert.setContentText("Are you sure you want to cancel the selected appointment?");
+
+        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        confirmationAlert.getButtonTypes().setAll(okButton, cancelButton);
+
+        Optional<ButtonType> result = confirmationAlert.showAndWait();
+
+        if (result.isPresent() && result.get() == okButton) {
+            JDBC.deleteAppointment(appointmentID);
+            appointments = JDBC.selectAppointmentRecords();
+            tblAppointments.setItems(appointments);
+
+            Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+            successAlert.setTitle("Cancellation Successful");
+            successAlert.setHeaderText("Appointment cancelled");
+            successAlert.setContentText(String.format("Appointment ID: %d\nAppointment Type: %s\n\nThe selected appointment was successfully cancelled.", appointmentID, appointmentType));
+            successAlert.showAndWait();
+        }
     }
 
     @FXML
@@ -247,28 +272,42 @@ public class ScheduleController implements Initializable {
 
     @FXML
     private void deleteCustomer() throws SQLException {
-        var sql = "DELETE FROM customers WHERE Customer_ID = ?";
-        var recordID = tblCustomers.getSelectionModel().getSelectedItem().customerID();
+        var customerID = tblCustomers.getSelectionModel().getSelectedItem().customerID();
 
-        if (appointments.stream()
-                .map(Appointment::customerID)
-                .toList()
-                .contains(String.valueOf(tblCustomers.getSelectionModel().getSelectedItem().customerID()))) {
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirm Deletion");
+        confirmationAlert.setHeaderText("Are you sure?");
+        confirmationAlert.setContentText("Are you sure you want to delete the selected customer? Note: All associated appointments will also be deleted.");
 
-            Alert hasAppointmentsAlert = new Alert(Alert.AlertType.WARNING);
-            hasAppointmentsAlert.setTitle("Customer has appointments");
-            hasAppointmentsAlert.setHeaderText("Cannot delete customer");
-            hasAppointmentsAlert.setContentText("There are appointments scheduled for this customer. Please delete " +
-                    "the appointments first.");
-        } else {
-            JDBC.deleteRecord(sql, recordID);
+        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        confirmationAlert.getButtonTypes().setAll(okButton, cancelButton);
+
+        Optional<ButtonType> result = confirmationAlert.showAndWait();
+
+        if (result.isPresent() && result.get() == okButton) {
+            appointments.stream()
+                    .filter(appointment -> appointment.customerID().contains(String.valueOf(customerID)))
+                    .forEach(appointment -> {
+                        try {
+                            JDBC.deleteAppointment(appointment.appointmentID());
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+
+            appointments = JDBC.selectAppointmentRecords();
+            tblAppointments.setItems(appointments);
+
+            JDBC.deleteCustomer(customerID);
             customers = JDBC.selectCustomerRecords();
             tblCustomers.setItems(customers);
 
             Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-            successAlert.setTitle("Customer deleted");
-            successAlert.setHeaderText(null);
-            successAlert.setContentText("The selected customer was successfully deleted.");
+            successAlert.setTitle("Deletion Successful");
+            successAlert.setHeaderText("Customer deleted");
+            successAlert.setContentText("The selected customer and all associated appointments were successfully deleted.");
+            successAlert.showAndWait();
         }
     }
 

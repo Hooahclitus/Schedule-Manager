@@ -30,7 +30,7 @@ public class CustomerController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        country.setItems(JDBC.selectFieldData("SELECT Country FROM countries"));
+        country.setItems(JDBC.selectCountry());
         country.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 switch ((String) newValue) {
@@ -48,9 +48,7 @@ public class CustomerController implements Initializable {
     }
 
     private void populateDivisionComboBox(int countryId) {
-        String sql = "SELECT Division FROM first_level_divisions WHERE Country_ID = %d ORDER BY Division";
-        String query = String.format(sql, countryId);
-        division.setItems(JDBC.selectFieldData(query));
+        division.setItems(JDBC.selectDivision(countryId));
         division.setDisable(false);
     }
 

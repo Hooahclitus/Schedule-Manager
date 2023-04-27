@@ -95,7 +95,7 @@ public abstract class JDBC {
         return appointments;
     }
 
-    public static ObservableList<Object> selectFieldData(String sql) {
+    private static ObservableList<Object> selectFieldData(String sql) {
         ObservableList<Object> fieldData = FXCollections.observableArrayList();
         try {
             ResultSet resultSet = connection.createStatement().executeQuery(sql);
@@ -106,6 +106,41 @@ public abstract class JDBC {
             throw new RuntimeException(e);
         }
         return fieldData;
+    }
+
+    public static ObservableList<Object> selectContacts() {
+        return selectFieldData("SELECT Contact_Name FROM contacts ORDER BY Contact_Name");
+    }
+
+    public static ObservableList<Object> selectCustomerID() {
+        return selectFieldData("SELECT Customer_ID FROM customers ORDER BY Customer_ID");
+    }
+
+    public static ObservableList<Object> selectUserID() {
+        return selectFieldData("SELECT User_ID FROM users ORDER BY User_ID");
+    }
+
+    public static ObservableList<Object> selectCountry() {
+        return selectFieldData("SELECT Country FROM countries");
+    }
+
+    public static ObservableList<Object> selectDivision(int countryID) {
+        String sql = String.format("SELECT Division FROM first_level_divisions WHERE Country_ID = %d ORDER BY Division", countryID);
+        return selectFieldData(sql);
+    }
+
+    public static void deleteRecord(String sql, int recordID) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setInt(1, recordID);
+        preparedStatement.executeUpdate();
+    }
+
+    public static void deleteAppointment(int appointmentID) throws SQLException {
+        deleteRecord("DELETE FROM appointments WHERE Appointment_ID = ?", appointmentID);
+    }
+
+    public static void deleteCustomer(int customerID) throws SQLException {
+        deleteRecord("DELETE FROM customers WHERE Customer_ID = ?", customerID);
     }
 
     private static void updateTable(String sql, Map<Integer, ?> formData) throws SQLException {
@@ -122,35 +157,29 @@ public abstract class JDBC {
         preparedStatement.executeUpdate();
     }
 
-    public static void deleteRecord(String sql, int recordID) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setInt(1, recordID);
-        preparedStatement.executeUpdate();
-    }
-
     public static void updateAppointmentsTable(Button submit, Map<Integer, ?> formData) throws SQLException {
-        final var INSERT_APPOINTMENT_SQL = "INSERT INTO appointments (Title, Description, Location, Type, Start, End," +
+        final String INSERT_APPOINTMENT_SQL = "INSERT INTO appointments (Title, Description, Location, Type, Start, End," +
                 " Customer_ID, User_ID, Contact_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, (SELECT Contact_ID FROM contacts " +
                 "WHERE Contact_Name = ?))";
 
-        final var UPDATE_APPOINTMENT_SQL = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type = " +
+        final String UPDATE_APPOINTMENT_SQL = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type = " +
                 "?, Start = ?, End = ?, Customer_ID = ?, User_ID = ?, Contact_ID = (SELECT Contact_ID FROM contacts " +
                 "WHERE Contact_Name = ?) WHERE Appointment_ID = ?";
 
-        var sql = submit.getText().equals("Update") ? UPDATE_APPOINTMENT_SQL : INSERT_APPOINTMENT_SQL;
+        String sql = submit.getText().equals("Update") ? UPDATE_APPOINTMENT_SQL : INSERT_APPOINTMENT_SQL;
 
         updateTable(sql, formData);
     }
 
     public static void updateCustomersTable(Button submit, Map<Integer, ?> formData) throws SQLException {
-        final var INSERT_CUSTOMER_SQL = "INSERT INTO customers (Customer_Name, Address, Postal_Code, Phone, " +
+        final String INSERT_CUSTOMER_SQL = "INSERT INTO customers (Customer_Name, Address, Postal_Code, Phone, " +
                 "Division_ID) VALUES (?, ?, ?, ?, (SELECT Division_ID FROM first_level_divisions WHERE Division = ?))";
 
-        final var UPDATE_CUSTOMER_SQL = "UPDATE customers SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone " +
+        final String UPDATE_CUSTOMER_SQL = "UPDATE customers SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone " +
                 "= ?, Division_ID = (SELECT Division_ID FROM first_level_divisions WHERE Division = ?) WHERE " +
                 "Customer_ID = ?";
 
-        var sql = submit.getText().equals("Update") ? UPDATE_CUSTOMER_SQL : INSERT_CUSTOMER_SQL;
+        String sql = submit.getText().equals("Update") ? UPDATE_CUSTOMER_SQL : INSERT_CUSTOMER_SQL;
 
         updateTable(sql, formData);
     }

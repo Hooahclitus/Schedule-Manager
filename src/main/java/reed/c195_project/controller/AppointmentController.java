@@ -52,9 +52,9 @@ public class AppointmentController implements Initializable {
                 .map(LocalDateTime::getHour)
                 .collect(toList()))));
 
-        contacts.setItems(JDBC.selectFieldData("SELECT Contact_Name FROM contacts ORDER BY Contact_Name"));
-        customerID.setItems(JDBC.selectFieldData("SELECT Customer_ID FROM customers ORDER BY Customer_ID"));
-        userID.setItems(JDBC.selectFieldData("SELECT User_ID FROM users ORDER BY User_ID"));
+        contacts.setItems(JDBC.selectContacts());
+        customerID.setItems(JDBC.selectCustomerID());
+        userID.setItems(JDBC.selectUserID());
 
         var fieldsAndLimits = Map.of(title, 50, description, 50, location, 50, type, 50);
         var combos = List.of(contacts, customerID, userID, startHour, startMinute, endHour, endMinute);
