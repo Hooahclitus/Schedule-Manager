@@ -54,6 +54,9 @@ public class ScheduleController implements Initializable {
     @FXML
     private TextArea txtArea;
 
+    @FXML
+    private TabPane tabPane;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -134,6 +137,14 @@ public class ScheduleController implements Initializable {
                                 }
                         )
                 );
+    }
+
+    public void selectAppointmentsTab() {
+        tabPane.getSelectionModel().select(0);
+    }
+
+    public void selectCustomersTab() {
+        tabPane.getSelectionModel().select(1);
     }
 
     @FXML

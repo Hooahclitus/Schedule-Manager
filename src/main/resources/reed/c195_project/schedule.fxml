@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="reed.c195_project.controller.ScheduleController">
+<TabPane fx:id="tabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="reed.c195_project.controller.ScheduleController">
     <Tab fx:id="tbAppointments" text="Appointments">
         <AnchorPane minHeight="0.0" minWidth="0.0">
             <VBox spacing="10.0">
@@ -82,7 +82,7 @@
             </VBox>
         </AnchorPane>
     </Tab>
-    <Tab fx:id="tbReport" text="Reports">
+    <Tab fx:id="tbReports" text="Reports">
         <AnchorPane>
             <VBox alignment="CENTER" layoutX="27.0" layoutY="106.0">
                 <Label alignment="CENTER" text="Contacts">

@@ -1,7 +1,6 @@
 package reed.c195_project.utils;
 
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -39,13 +38,20 @@ public abstract class LoadScene {
         stage.show();
     }
 
-    public static void schedule(ActionEvent actionEvent, boolean isInitialLogin) throws IOException {
+    public static void schedule(ActionEvent actionEvent, String tab, boolean isInitialLogin) throws IOException {
         FXMLLoader loader = new FXMLLoader(AppEntry.class.getResource("schedule.fxml"));
         Parent root = loader.load();
 
+        ScheduleController scheduleController = loader.getController();
+
         if (isInitialLogin) {
-            ScheduleController scheduleController = loader.getController();
             scheduleController.upcomingAppointmentsAlert();
+        }
+
+        if (tab.equals("appointment")) {
+            scheduleController.selectAppointmentsTab();
+        } else if (tab.equals("customer")) {
+            scheduleController.selectCustomersTab();
         }
 
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
@@ -53,7 +59,8 @@ public abstract class LoadScene {
         stage.centerOnScreen();
     }
 
-    public static void appointment(ActionEvent actionEvent, ObservableList<Appointment> appointments, Appointment... appointment) throws IOException {
+    public static void appointment(ActionEvent actionEvent, ObservableList<Appointment> appointments,
+                                   Appointment... appointment) throws IOException {
         FXMLLoader loader = new FXMLLoader(AppEntry.class.getResource("appointment.fxml"));
         Parent root = loader.load();
 
