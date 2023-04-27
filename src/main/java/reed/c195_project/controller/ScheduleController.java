@@ -50,7 +50,7 @@ public class ScheduleController implements Initializable {
 
     @FXML
     private Button modifyAppointment, modifyCustomer, deleteAppointment, deleteCustomer;
-    
+
     @FXML
     private TextArea txtArea;
 
@@ -63,12 +63,12 @@ public class ScheduleController implements Initializable {
         tblAppointments.getSelectionModel().selectedItemProperty().addListener(observable -> {
             modifyAppointment.setDisable(observable == null);
             deleteAppointment.setDisable(observable == null);
-                });
+        });
 
         tblCustomers.getSelectionModel().selectedItemProperty().addListener(observable -> {
             modifyCustomer.setDisable(observable == null);
             deleteCustomer.setDisable(observable == null);
-                });
+        });
 
         setupCustomersTable();
         setupAppointmentsTable();
@@ -222,8 +222,12 @@ public class ScheduleController implements Initializable {
                                         Appointment ID: %s
                                         \tTitle: %s, Type: %s, Description: %s, Start Date/Time: %s, End Date/Time: %s, Customer ID: %s
                                         """,
-                                appointment.appointmentID(), appointment.title(), appointment.type(),
-                                appointment.description(), appointment.start(), appointment.end(),
+                                appointment.appointmentID(),
+                                appointment.title(),
+                                appointment.type(),
+                                appointment.description(),
+                                appointment.start(),
+                                appointment.end(),
                                 appointment.customerID()))
                         .collect(Collectors.joining("\n"))))
                 .collect(Collectors.joining("\n"));
@@ -266,7 +270,14 @@ public class ScheduleController implements Initializable {
             Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
             successAlert.setTitle("Cancellation Successful");
             successAlert.setHeaderText("Appointment cancelled");
-            successAlert.setContentText(String.format("Appointment ID: %d\nAppointment Type: %s\n\nThe selected appointment was successfully cancelled.", appointmentID, appointmentType));
+            successAlert.setContentText(String.format("""
+                            Appointment ID: %d
+                            Appointment Type: %s
+
+                            The selected appointment was successfully cancelled.
+                            """,
+                    appointmentID,
+                    appointmentType));
             successAlert.showAndWait();
         }
     }
@@ -288,7 +299,8 @@ public class ScheduleController implements Initializable {
         Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmationAlert.setTitle("Confirm Deletion");
         confirmationAlert.setHeaderText("Are you sure?");
-        confirmationAlert.setContentText("Are you sure you want to delete the selected customer? Note: All associated appointments will also be deleted.");
+        confirmationAlert.setContentText("Are you sure you want to delete the selected customer? Note: All associated" +
+                " appointments will also be deleted.");
 
         ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
         ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
@@ -317,7 +329,8 @@ public class ScheduleController implements Initializable {
             Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
             successAlert.setTitle("Deletion Successful");
             successAlert.setHeaderText("Customer deleted");
-            successAlert.setContentText("The selected customer and all associated appointments were successfully deleted.");
+            successAlert.setContentText("The selected customer and all associated appointments were successfully " +
+                    "deleted.");
             successAlert.showAndWait();
         }
     }

@@ -8,10 +8,11 @@ import reed.c195_project.model.Appointment;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.*;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 public abstract class Validate {
     public static boolean userCredentials(TextField userName, TextField password) throws SQLException {
@@ -49,7 +50,8 @@ public abstract class Validate {
 
         return appointmentID.length == 0
                 ? appointmentStream.toList()
-                : appointmentStream.filter(e -> e.appointmentID() != Integer.parseInt(appointmentID[0].getText())).toList();
+                :
+                appointmentStream.filter(e -> e.appointmentID() != Integer.parseInt(appointmentID[0].getText())).toList();
     }
 
     private static boolean areTextFieldsValid(Map<TextField, Integer> textFields) {

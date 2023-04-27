@@ -14,8 +14,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<TabPane fx:id="tabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="reed.c195_project.controller.ScheduleController">
-    <Tab fx:id="tbAppointments" text="Appointments">
+<TabPane fx:id="tabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="reed.c195_project.controller.ScheduleController">
+    <Tab text="Appointments">
         <AnchorPane minHeight="0.0" minWidth="0.0">
             <VBox spacing="10.0">
                 <padding>
@@ -38,19 +38,19 @@
                         <TableColumn fx:id="colAppointmentUserID" prefWidth="55.0" text="User ID" />
                     </columns>
                 </TableView>
-                <HBox fx:id="buttons" alignment="CENTER" spacing="10.0">
+                <HBox alignment="CENTER" spacing="10.0">
                     <padding>
                         <Insets top="2.0" />
                     </padding>
-                    <Button fx:id="btnAddAppointment" mnemonicParsing="false" onAction="#addAppointment" prefWidth="75.0" text="Add" />
+                    <Button mnemonicParsing="false" onAction="#addAppointment" prefWidth="75.0" text="Add" />
                     <Button fx:id="modifyAppointment" disable="true" mnemonicParsing="false" onAction="#modifyAppointment" prefWidth="75.0" text="Modify" />
                     <Button fx:id="deleteAppointment" disable="true" mnemonicParsing="false" onAction="#deleteAppointment" prefWidth="75.0" text="Delete" />
-                    <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#logout" prefWidth="75.0" text="Logout" />
+                    <Button mnemonicParsing="false" onAction="#logout" prefWidth="75.0" text="Logout" />
                 </HBox>
             </VBox>
         </AnchorPane>
     </Tab>
-    <Tab fx:id="tbCustomers" text="Customers">
+    <Tab text="Customers">
         <AnchorPane>
             <VBox spacing="10.0">
                 <padding>
@@ -79,7 +79,7 @@
             </VBox>
         </AnchorPane>
     </Tab>
-    <Tab fx:id="tbReports" text="Reports">
+    <Tab text="Reports">
         <AnchorPane>
             <VBox alignment="CENTER" layoutX="27.0" layoutY="106.0">
                 <Label alignment="CENTER" text="Contacts">

@@ -125,7 +125,8 @@ public abstract class JDBC {
     }
 
     public static ObservableList<Object> selectDivision(int countryID) {
-        String sql = String.format("SELECT Division FROM first_level_divisions WHERE Country_ID = %d ORDER BY Division", countryID);
+        String sql = String.format("SELECT Division FROM first_level_divisions WHERE Country_ID = %d ORDER BY " +
+                "Division", countryID);
         return selectFieldData(sql);
     }
 
@@ -158,11 +159,13 @@ public abstract class JDBC {
     }
 
     public static void updateAppointmentsTable(Button submit, Map<Integer, ?> formData) throws SQLException {
-        final String INSERT_APPOINTMENT_SQL = "INSERT INTO appointments (Title, Description, Location, Type, Start, End," +
+        final String INSERT_APPOINTMENT_SQL = "INSERT INTO appointments (Title, Description, Location, Type, Start, " +
+                "End," +
                 " Customer_ID, User_ID, Contact_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, (SELECT Contact_ID FROM contacts " +
                 "WHERE Contact_Name = ?))";
 
-        final String UPDATE_APPOINTMENT_SQL = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type = " +
+        final String UPDATE_APPOINTMENT_SQL = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type" +
+                " = " +
                 "?, Start = ?, End = ?, Customer_ID = ?, User_ID = ?, Contact_ID = (SELECT Contact_ID FROM contacts " +
                 "WHERE Contact_Name = ?) WHERE Appointment_ID = ?";
 
@@ -175,7 +178,8 @@ public abstract class JDBC {
         final String INSERT_CUSTOMER_SQL = "INSERT INTO customers (Customer_Name, Address, Postal_Code, Phone, " +
                 "Division_ID) VALUES (?, ?, ?, ?, (SELECT Division_ID FROM first_level_divisions WHERE Division = ?))";
 
-        final String UPDATE_CUSTOMER_SQL = "UPDATE customers SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone " +
+        final String UPDATE_CUSTOMER_SQL = "UPDATE customers SET Customer_Name = ?, Address = ?, Postal_Code = ?, " +
+                "Phone " +
                 "= ?, Division_ID = (SELECT Division_ID FROM first_level_divisions WHERE Division = ?) WHERE " +
                 "Customer_ID = ?";
 
