@@ -95,7 +95,7 @@
                 </Label>
                 <Button mnemonicParsing="false" onAction="#appointmentsByContact" prefHeight="50.0" prefWidth="210.0" text="Appointments by Contact">
                     <VBox.margin>
-                        <Insets bottom="25.0" />
+                        <Insets bottom="20.0" />
                     </VBox.margin>
                 </Button>
                 <Label alignment="CENTER" text="Appointments">
