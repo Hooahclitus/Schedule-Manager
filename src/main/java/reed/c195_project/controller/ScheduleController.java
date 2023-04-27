@@ -50,7 +50,7 @@ public class ScheduleController implements Initializable {
 
     @FXML
     private Button modifyAppointment, modifyCustomer, deleteAppointment, deleteCustomer;
-
+    
     @FXML
     private TextArea txtArea;
 
@@ -147,6 +147,34 @@ public class ScheduleController implements Initializable {
         tabPane.getSelectionModel().select(1);
     }
 
+    public void upcomingAppointmentsAlert() {
+        var upcomingAppointments = Validate.areAppointmentsWithin15Minutes(appointments);
+        var appointmentStrings = upcomingAppointments.stream()
+                .filter(appointment -> appointment.start().isBefore(LocalTime.now().plusMinutes(15)))
+                .map(appointment -> String.format("Appointment ID: %d\n\tDate: %s - Time: %s - %s\n",
+                        appointment.appointmentID(),
+                        appointment.start().format(DateTime.dateFormat),
+                        appointment.start().format(DateTime.timeFormat),
+                        appointment.end().format(DateTime.timeFormat)))
+                .toList();
+
+        String appointmentDetails = String.join("\n", appointmentStrings);
+
+        Alert alert;
+        if (!upcomingAppointments.isEmpty()) {
+            alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Upcoming Appointments");
+            alert.setHeaderText("There are appointments within 15 minutes of the current time.");
+            alert.setContentText("The following appointments are scheduled within 15 minutes:\n\n" + appointmentDetails);
+        } else {
+            alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Upcoming Appointments");
+            alert.setHeaderText("No appointments within 15 minutes of the current time.");
+            alert.setContentText("There are no upcoming appointments within 15 minutes of the current time.");
+        }
+        alert.showAndWait();
+    }
+
     @FXML
     private void countAppointmentByTypeThenMonth() {
         var result = appointments.stream()
@@ -201,34 +229,6 @@ public class ScheduleController implements Initializable {
                 .collect(Collectors.joining("\n"));
 
         txtArea.setText(result);
-    }
-
-    public void upcomingAppointmentsAlert() {
-        var upcomingAppointments = Validate.areAppointmentsWithin15Minutes(appointments);
-        var appointmentStrings = upcomingAppointments.stream()
-                .filter(appointment -> appointment.start().isBefore(LocalTime.now().plusMinutes(15)))
-                .map(appointment -> String.format("Appointment ID: %d\n\tDate: %s - Time: %s - %s\n",
-                        appointment.appointmentID(),
-                        appointment.start().format(DateTime.dateFormat),
-                        appointment.start().format(DateTime.timeFormat),
-                        appointment.end().format(DateTime.timeFormat)))
-                .toList();
-
-        String appointmentDetails = String.join("\n", appointmentStrings);
-
-        Alert alert;
-        if (!upcomingAppointments.isEmpty()) {
-            alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Upcoming Appointments");
-            alert.setHeaderText("There are appointments within 15 minutes of the current time.");
-            alert.setContentText("The following appointments are scheduled within 15 minutes:\n\n" + appointmentDetails);
-        } else {
-            alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Upcoming Appointments");
-            alert.setHeaderText("No appointments within 15 minutes of the current time.");
-            alert.setContentText("There are no upcoming appointments within 15 minutes of the current time.");
-        }
-        alert.showAndWait();
     }
 
     @FXML
