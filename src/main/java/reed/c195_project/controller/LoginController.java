@@ -21,15 +21,6 @@ import java.time.ZoneOffset;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-/**
- * The LoginController class manages the login form for the application.
- * It initializes the form with resource bundle values for various form elements
- * and attempts to log the user in, displaying an error message if the user's credentials are invalid.
- * <p>
- * Author: Charles Reed
- * <p>
- * Date: 2023-04-13
- */
 public class LoginController implements Initializable {
     ResourceBundle resourceBundle;
 
@@ -89,6 +80,12 @@ public class LoginController implements Initializable {
         }
     }
 
+    /**
+     * Logs the user's login activity to a file.
+     *
+     * @param status The status of the login activity.
+     * @throws IOException if there is an error writing to the log file.
+     */
     public void logger(String status) throws IOException {
         String log = String.format("""
                         Username: %s
@@ -107,6 +104,9 @@ public class LoginController implements Initializable {
         }
     }
 
+    /**
+     * Closes the current scene and exits the application.
+     */
     @FXML
     private void exit() {
         LoadScene.exit();
