@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
@@ -43,6 +44,23 @@ public class AppointmentController implements Initializable {
     private Button submit;
 
 
+    /**
+     * Initializes the controller class. Sets up the options for the start and end time
+     * ComboBoxes, sets the options for the contacts, customerID, and userID ComboBoxes,
+     * and validates the appointment input fields before allowing the user to submit.
+     * <p>
+     * The use of lambda expressions in this method allows for concise and readable code.
+     * By using a lambda expression in forEach() method, we are able to apply the same
+     * operation (setting the items of the ComboBox) to both startMinute and endMinute,
+     * and both startHour and endHour in just one line of code. Similarly, the use of
+     * lambda expressions and method references in the map() method allows us to map each
+     * hour to a LocalDateTime object, filter out appointment times that are not valid,
+     * and map the remaining LocalDateTime objects to just their hour values in a single
+     * stream operation. This makes the code more concise and easier to read.
+     *
+     * @param url            the URL of the FXML document
+     * @param resourceBundle the ResourceBundle used to localize the FXML document
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Stream.of(startMinute, endMinute).forEach(e -> e.setItems(observableList(rangeClosed(0, 59).boxed().collect(toList()))));
@@ -62,29 +80,49 @@ public class AppointmentController implements Initializable {
         Validate.appointmentInputs(fieldsAndLimits, combos, date, submit);
     }
 
+    /**
+     * Displays an alert to inform the user that the requested appointment time conflicts with other appointments.
+     *
+     * @param appointments A list of Appointment objects representing the conflicting appointments.
+     */
     private void conflictingAppointmentsAlert(List<Appointment> appointments) {
-        List<String> conflictingAppointments = appointments.stream()
-                .map(appointment -> String.format("Appointment ID: %d\n\tDate: %s - Time: %s - %s\n",
+        var conflictingAppointments = appointments.stream()
+                .map(appointment -> String.format("Appointment ID: %d\n\tDate: %s - Time: %s - %s",
                         appointment.appointmentID(),
                         appointment.date().format(DateTime.dateFormat),
                         appointment.start().format(DateTime.timeFormat),
                         appointment.end().format(DateTime.timeFormat)))
-                .toList();
-
-        String appointmentDetails = String.join("\n", conflictingAppointments);
+                .collect(Collectors.joining("\n\n"));
 
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Scheduling Conflict");
         alert.setHeaderText("Unable to Schedule Appointment");
-        alert.setContentText("The appointment time conflicts with the following:\n\n"
-                + appointmentDetails + "\n\nPlease select a different time slot.");
+        alert.setContentText(String.format("""
+                The appointment time conflicts with the following:
+                %s
+                                
+                Please select a different time slot.""", conflictingAppointments));
         alert.showAndWait();
     }
 
+    /**
+     * Sets the appointments list for verification of appointment data within the appointment GUI.
+     *
+     * @param appointments The list of appointments to be set for this object.
+     */
     public void passAppointments(List<Appointment> appointments) {
         this.appointments = appointments;
     }
 
+    /**
+     * Configures the appointment form based on the number of appointments provided.
+     * If no appointments are given, the submit button is changed to "Add" and the text of the appointmentID text
+     * field is set to "Auto-Generated".
+     * If one appointment is given, the submit button text is set to "Update", and the appointmentID text field is
+     * populated with the appointment id for the selected appointment.
+     *
+     * @param appointment a variable number of Appointment objects
+     */
     public void configureAppointmentForm(Appointment... appointment) {
         switch (appointment.length) {
             case 0 -> {
@@ -98,6 +136,11 @@ public class AppointmentController implements Initializable {
         }
     }
 
+    /**
+     * Populates a form with data from the selected appointment object.
+     *
+     * @param appointment The appointment object to extract data from.
+     */
     public void populateFormWithAppointmentData(Appointment appointment) {
         var fields = Map.of(
                 appointmentID, String.valueOf(appointment.appointmentID()),
@@ -122,6 +165,18 @@ public class AppointmentController implements Initializable {
         date.setValue(appointment.date());
     }
 
+    /**
+     * Inserts or updates an appointment into the database. If the submit button text is "Update", the appointment is
+     * updated,
+     * otherwise it is inserted. Validates if the appointments are overlapping or not, and provides an alert if the
+     * appointments
+     * are overlapping.
+     *
+     * @param actionEvent The event that triggered this method.
+     *
+     * @throws SQLException If there is an error accessing the database.
+     * @throws IOException  If there is an error reading input.
+     */
     @FXML
     private void insertOrUpdateAppointment(ActionEvent actionEvent) throws SQLException, IOException {
         var startDateTime = DateTime.toLocalDateTime(date, startHour, startMinute);
@@ -155,6 +210,13 @@ public class AppointmentController implements Initializable {
         LoadScene.schedule(actionEvent, "appointment", false);
     }
 
+    /**
+     * This method cancels the current action and loads the appointment scene.
+     *
+     * @param actionEvent The event that triggered this method.
+     *
+     * @throws IOException If there is an error while loading the appointment scene.
+     */
     @FXML
     private void cancel(ActionEvent actionEvent) throws IOException {
         LoadScene.schedule(actionEvent, "appointment", false);
