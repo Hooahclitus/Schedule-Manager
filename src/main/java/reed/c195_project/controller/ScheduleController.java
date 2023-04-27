@@ -58,6 +58,14 @@ public class ScheduleController implements Initializable {
     private TabPane tabPane;
 
 
+    /**
+     * Initializes the controller class and sets up listeners for the modify and delete buttons in the appointments and customers tabs.
+     * The listeners disable the buttons when there is no selection in the corresponding tableviews.
+     * Additionally, this method sets up the tableviews for the customers and appointments tabs and configures the filter for the appointments table.
+     *
+     * @param url the URL of the FXML document.
+     * @param resourceBundle the ResourceBundle used to localize the FXML document.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         tblAppointments.getSelectionModel().selectedItemProperty().addListener(observable -> {
@@ -75,6 +83,9 @@ public class ScheduleController implements Initializable {
         setupAppointmentsFilter();
     }
 
+    /**
+     * Sets up the appointments table.
+     */
     private void setupAppointmentsTable() {
         Map<TableColumn<Appointment, Object>, Function<Appointment, Object>> appointmentData = Map.ofEntries(
                 Map.entry(colAppointmentID, Appointment::appointmentID),
@@ -94,6 +105,9 @@ public class ScheduleController implements Initializable {
         tblAppointments.setItems(appointments);
     }
 
+    /**
+     * Sets up the customers table.
+     */
     private void setupCustomersTable() {
         Map<TableColumn<Customer, Object>, Function<Customer, Object>> customerData = Map.of(
                 colCustomerID, Customer::customerID,
@@ -110,6 +124,9 @@ public class ScheduleController implements Initializable {
         tblCustomers.setItems(customers);
     }
 
+    /**
+     * Sets up the appointments filter.
+     */
     private void setupAppointmentsFilter() {
         Function<LocalDate, Integer> getCurrentWeek =
                 date -> date.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
@@ -139,14 +156,25 @@ public class ScheduleController implements Initializable {
                 );
     }
 
+    /**
+     * Selects the Appointments tab in the tab pane.
+     */
     public void selectAppointmentsTab() {
         tabPane.getSelectionModel().select(0);
     }
 
+    /**
+     * Selects the Customers tab in the tab pane.
+     */
     public void selectCustomersTab() {
         tabPane.getSelectionModel().select(1);
     }
 
+    /**
+     * Displays an Alert dialog that shows upcoming appointments within the next 15 minutes.
+     * The Alert dialog will display the Appointment ID, Date, Start Time, and End Time for each upcoming appointment.
+     * If there are no upcoming appointments within 15 minutes, the Alert dialog will display a message indicating so.
+     */
     public void upcomingAppointmentsAlert() {
         var upcomingAppointments = Validate.areAppointmentsWithin15Minutes(appointments);
         var appointmentStrings = upcomingAppointments.stream()
@@ -175,6 +203,10 @@ public class ScheduleController implements Initializable {
         alert.showAndWait();
     }
 
+    /**
+     * This method counts the number of appointments by type and month, then sorts the results and formats them as a string.
+     * The string is then set as the text of a text area.
+     */
     @FXML
     private void countAppointmentByTypeThenMonth() {
         var result = appointments.stream()
@@ -197,6 +229,10 @@ public class ScheduleController implements Initializable {
         txtArea.setText(result);
     }
 
+    /**
+     * This method counts the number of appointments by date, then sorts the results and formats them as a string.
+     * The string is then set as the text of a text area.
+     */
     @FXML
     private void countAppointmentByDate() {
         var results = appointments.stream()
@@ -212,6 +248,10 @@ public class ScheduleController implements Initializable {
         txtArea.setText(results);
     }
 
+    /**
+     * This method groups appointments by contact, then formats the results as a string.
+     * The string is then set as the text of a text area.
+     */
     @FXML
     private void appointmentsByContact() {
         var result = appointments.stream()
@@ -235,16 +275,34 @@ public class ScheduleController implements Initializable {
         txtArea.setText(result);
     }
 
+    /**
+     * Launches the 'Add Appointment' screen.
+     *
+     * @param actionEvent the ActionEvent that triggered this method call
+     * @throws IOException if an I/O error occurs while loading the scene
+     */
     @FXML
     private void addAppointment(ActionEvent actionEvent) throws IOException {
         LoadScene.appointment(actionEvent, appointments);
     }
 
+    /**
+     * Launches the 'Modify Appointment' screen, pre-populated with the selected appointment's data.
+     *
+     * @param actionEvent the ActionEvent that triggered this method call
+     * @throws IOException if an I/O error occurs while loading the scene
+     */
     @FXML
     private void modifyAppointment(ActionEvent actionEvent) throws IOException {
         LoadScene.appointment(actionEvent, appointments, tblAppointments.getSelectionModel().getSelectedItem());
     }
 
+    /**
+     * Deletes the selected appointment and updates the table view with the remaining appointments.
+     * Prompts the user to confirm the deletion before proceeding.
+     *
+     * @throws SQLException if a database access error occurs while deleting the appointment
+     */
     @FXML
     private void deleteAppointment() throws SQLException {
         var appointment = tblAppointments.getSelectionModel().getSelectedItem();
@@ -282,16 +340,34 @@ public class ScheduleController implements Initializable {
         }
     }
 
+    /**
+     * Loads the customer scene for adding a new customer.
+     *
+     * @param actionEvent the action event triggering the method
+     * @throws IOException if an I/O error occurs while loading the scene
+     */
     @FXML
     private void addCustomer(ActionEvent actionEvent) throws IOException {
         LoadScene.customer(actionEvent);
     }
 
+
+    /**
+     * Loads the customer scene for modifying an existing customer.
+     *
+     * @param actionEvent the action event triggering the method
+     * @throws IOException if an I/O error occurs while loading the scene
+     */
     @FXML
     private void modifyCustomer(ActionEvent actionEvent) throws IOException {
         LoadScene.customer(actionEvent, tblCustomers.getSelectionModel().getSelectedItem());
     }
 
+    /**
+     * Deletes the selected customer and all associated appointments.
+     *
+     * @throws SQLException if an error occurs while accessing the database
+     */
     @FXML
     private void deleteCustomer() throws SQLException {
         var customerID = tblCustomers.getSelectionModel().getSelectedItem().customerID();
@@ -335,6 +411,12 @@ public class ScheduleController implements Initializable {
         }
     }
 
+    /**
+     * Logs out the current user and returns to the login screen.
+     *
+     * @param actionEvent the action event triggering the method
+     * @throws IOException if an I/O error occurs while loading the login screen
+     */
     @FXML
     private void logout(ActionEvent actionEvent) throws IOException {
         LoadScene.login(actionEvent);
