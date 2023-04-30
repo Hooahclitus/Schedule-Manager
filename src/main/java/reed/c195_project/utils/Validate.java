@@ -73,7 +73,7 @@ public abstract class Validate {
     }
 
     /**
-     * Finds appointments that overlap with a given time period and contact, including the appointment
+     * Finds appointments that overlap with a given time period and customerID, including the appointment
      * with a given ID (if provided).
      * <p>
      * <b>LAMBDA JUSTIFICATION</b>: A lambda expression is used to filter the stream of appointments based on whether
@@ -81,7 +81,7 @@ public abstract class Validate {
      * the amount of boilerplate code required.
      *
      * @param appointments  the list of appointments to check
-     * @param contacts      the ComboBox containing the contact associated with the appointments
+     * @param customerID    the ComboBox containing the customerID associated with the appointments
      * @param start         the start time of the time period to check for overlapping appointments
      * @param end           the end time of the time period to check for overlapping appointments
      * @param appointmentID the optional TextField containing the ID of the appointment to include from the results
@@ -90,12 +90,14 @@ public abstract class Validate {
      * appointment with the given ID (if provided)
      */
     public static List<Appointment> areAppointmentsOverlapping(List<Appointment> appointments,
-                                                               ComboBox<Object> contacts,
+                                                               ComboBox<Object> customerID,
                                                                LocalDateTime start, LocalDateTime end,
                                                                TextField... appointmentID) {
         var appointmentStream = appointments.stream()
-                .filter(e -> e.contact().equals(contacts.getValue()))
-                .filter(e -> e.start().isBefore(end.toLocalTime()) && e.end().isAfter(start.toLocalTime()));
+                .filter(e -> e.customerID().equals(customerID.getValue()))
+                .filter(e -> e.date().isEqual(start.toLocalDate())
+                        && e.start().isBefore(end.toLocalTime())
+                        && e.end().isAfter(start.toLocalTime()));
 
         return appointmentID.length == 0
                 ? appointmentStream.toList()

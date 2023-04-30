@@ -204,7 +204,7 @@ public class ScheduleController implements Initializable {
                 .filter(appointment -> appointment.start().isBefore(LocalTime.now().plusMinutes(15)))
                 .map(appointment -> String.format("Appointment ID: %d\n\tDate: %s - Time: %s - %s\n",
                         appointment.appointmentID(),
-                        appointment.start().format(DateTime.dateFormat),
+                        appointment.date().format(DateTime.dateFormat),
                         appointment.start().format(DateTime.timeFormat),
                         appointment.end().format(DateTime.timeFormat)))
                 .toList();
