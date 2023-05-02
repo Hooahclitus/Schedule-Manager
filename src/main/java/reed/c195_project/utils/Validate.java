@@ -96,16 +96,17 @@ public abstract class Validate {
                                                                ComboBox<Object> customerID,
                                                                LocalDateTime start, LocalDateTime end,
                                                                TextField... appointmentID) {
+
         var appointmentStream = appointments.stream()
-                .filter(e -> e.customerID().equals(customerID.getValue()))
-                .filter(e -> e.date().isEqual(start.toLocalDate())
-                        && e.start().isBefore(end.toLocalTime())
-                        && e.end().isAfter(start.toLocalTime()));
+                .filter(appointment -> appointment.customerID().equals(customerID.getValue())
+                        && appointment.date().isEqual(start.toLocalDate())
+                        && appointment.start().isBefore(end.toLocalTime())
+                        && appointment.end().isAfter(start.toLocalTime()));
+
 
         return appointmentID.length == 0
                 ? appointmentStream.toList()
-                :
-                appointmentStream.filter(e -> e.appointmentID() != Integer.parseInt(appointmentID[0].getText())).toList();
+                : appointmentStream.filter(e -> e.appointmentID() != Integer.parseInt(appointmentID[0].getText())).toList();
     }
 
     /**
