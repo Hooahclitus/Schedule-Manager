@@ -58,18 +58,21 @@ public abstract class Validate {
     /**
      * Returns a List of Appointment objects that are scheduled within the next 15 minutes, based on the current time.
      * <p>
-     * <b>LAMBDA JUSTIFICATION</b>: A lambda expression is used in the filter() method to check if the start time of
-     * each appointment is after the current time and before 15 minutes from now. Using a lambda expression in this
-     * case improves code readability and conciseness, as it allows us to define the filtering condition in a clear
-     * and concise way, without having to create a separate method for it.
+     * <b>LAMBDA JUSTIFICATION</b>: A lambda expression is used in the filter() method to check if the start date and
+     * time of each appointment is after the current date and time and before 15 minutes from now. Using a lambda
+     * expression in this case improves code readability and conciseness, as it allows us to define the filtering
+     * condition in a clear and concise way, without having to create a separate method for it.
      *
      * @param appointments the list of appointments to filter
      *
      * @return a List of Appointment objects that are scheduled within the next 15 minutes, based on the current time
      */
     public static List<Appointment> areAppointmentsWithin15Minutes(ObservableList<Appointment> appointments) {
-        return appointments.stream().filter(appointment -> appointment.start().isAfter(LocalTime.now())
-                && appointment.start().isBefore(LocalTime.now().plusMinutes(15))).toList();
+        return appointments.stream().filter(appointment -> {
+            var dateTime = DateTime.toLocalDateTime(appointment.date(), appointment.start());
+
+            return dateTime.isAfter(LocalDateTime.now()) && dateTime.isBefore(LocalDateTime.now().plusMinutes(15));
+        }).toList();
     }
 
     /**
@@ -101,7 +104,8 @@ public abstract class Validate {
 
         return appointmentID.length == 0
                 ? appointmentStream.toList()
-                : appointmentStream.filter(e -> e.appointmentID() != Integer.parseInt(appointmentID[0].getText())).toList();
+                :
+                appointmentStream.filter(e -> e.appointmentID() != Integer.parseInt(appointmentID[0].getText())).toList();
     }
 
     /**
