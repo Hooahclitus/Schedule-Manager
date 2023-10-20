@@ -1,4 +1,4 @@
-package reed.c195_project.controller;
+package project.schedule_manager.controller;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -7,12 +7,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import reed.c195_project.model.Appointment;
-import reed.c195_project.model.Customer;
-import reed.c195_project.utils.DateTime;
-import reed.c195_project.utils.JDBC;
-import reed.c195_project.utils.LoadScene;
-import reed.c195_project.utils.Validate;
+import project.schedule_manager.model.Appointment;
+import project.schedule_manager.model.Customer;
+import project.schedule_manager.utils.DateTime;
+import project.schedule_manager.utils.JDBC;
+import project.schedule_manager.utils.LoadScene;
+import project.schedule_manager.utils.Validate;
 
 import java.io.IOException;
 import java.net.URL;
@@ -469,28 +469,3 @@ public class ScheduleController implements Initializable {
         LoadScene.login(actionEvent);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

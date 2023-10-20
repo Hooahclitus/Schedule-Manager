@@ -1,4 +1,4 @@
-package reed.c195_project.utils;
+package project.schedule_manager.utils;
 
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;

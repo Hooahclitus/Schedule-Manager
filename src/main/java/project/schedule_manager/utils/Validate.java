@@ -1,9 +1,9 @@
-package reed.c195_project.utils;
+package project.schedule_manager.utils;
 
 import javafx.beans.InvalidationListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
-import reed.c195_project.model.Appointment;
+import project.schedule_manager.model.Appointment;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

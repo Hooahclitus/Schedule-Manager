@@ -1,10 +1,10 @@
-package reed.c195_project.utils;
+package project.schedule_manager.utils;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
-import reed.c195_project.model.Appointment;
-import reed.c195_project.model.Customer;
+import project.schedule_manager.model.Appointment;
+import project.schedule_manager.model.Customer;
 
 import java.sql.*;
 import java.util.Map;
@@ -322,22 +322,3 @@ public abstract class JDBC {
         updateTable(sql, formData);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

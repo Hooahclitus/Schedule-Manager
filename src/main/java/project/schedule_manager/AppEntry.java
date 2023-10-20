@@ -1,9 +1,9 @@
-package reed.c195_project;
+package project.schedule_manager;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import reed.c195_project.utils.JDBC;
-import reed.c195_project.utils.LoadScene;
+import project.schedule_manager.utils.JDBC;
+import project.schedule_manager.utils.LoadScene;
 
 import java.io.IOException;
 

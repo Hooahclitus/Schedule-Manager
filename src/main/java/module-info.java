@@ -5,8 +5,8 @@ module reed.c195_project {
     requires mysql.connector.java;
 
 
-    opens reed.c195_project to javafx.fxml;
-    exports reed.c195_project;
-    exports reed.c195_project.controller;
-    opens reed.c195_project.controller to javafx.fxml;
+    opens project.schedule_manager to javafx.fxml;
+    exports project.schedule_manager;
+    exports project.schedule_manager.controller;
+    opens project.schedule_manager.controller to javafx.fxml;
 }

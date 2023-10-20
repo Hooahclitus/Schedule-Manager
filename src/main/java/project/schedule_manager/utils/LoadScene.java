@@ -1,4 +1,4 @@
-package reed.c195_project.utils;
+package project.schedule_manager.utils;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -8,12 +8,12 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import reed.c195_project.AppEntry;
-import reed.c195_project.controller.AppointmentController;
-import reed.c195_project.controller.CustomerController;
-import reed.c195_project.controller.ScheduleController;
-import reed.c195_project.model.Appointment;
-import reed.c195_project.model.Customer;
+import project.schedule_manager.AppEntry;
+import project.schedule_manager.controller.AppointmentController;
+import project.schedule_manager.controller.CustomerController;
+import project.schedule_manager.controller.ScheduleController;
+import project.schedule_manager.model.Appointment;
+import project.schedule_manager.model.Customer;
 
 import java.io.IOException;
 import java.util.ResourceBundle;
@@ -124,20 +124,3 @@ public abstract class LoadScene {
         Platform.exit();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

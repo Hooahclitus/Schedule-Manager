@@ -1,4 +1,4 @@
-package reed.c195_project.model;
+package project.schedule_manager.model;
 
 /**
  * Represents a customer in the scheduling system

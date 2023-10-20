@@ -1,6 +1,6 @@
-package reed.c195_project.model;
+package project.schedule_manager.model;
 
-import reed.c195_project.utils.DateTime;
+import project.schedule_manager.utils.DateTime;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -57,16 +57,3 @@ public record Appointment(int appointmentID,
         return endDateTime().format(DateTime.dateTimeFormat);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

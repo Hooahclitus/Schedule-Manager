@@ -6,7 +6,7 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="8.0"
       xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml" fx:controller="reed.c195_project.controller.CustomerController">
+      xmlns:fx="http://javafx.com/fxml" fx:controller="project.schedule_manager.controller.CustomerController">
     <padding>
         <Insets bottom="14.0" left="14.0" right="14.0" top="14.0"/>
     </padding>
