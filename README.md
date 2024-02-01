@@ -1,4 +1,4 @@
-# Schedule Manager 1.0
+# Schedule Manager
 
 ## Overview
 **Schedule Manager** is a personal project developed to practice Java and explore JavaFX and JavaFXML. The application serves as a tool to facilitate the scheduling of appointments with customers.
